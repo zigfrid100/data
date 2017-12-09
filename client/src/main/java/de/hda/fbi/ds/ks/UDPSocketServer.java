@@ -116,9 +116,38 @@ public class UDPSocketServer {
             String resultFromRPCServer = client.buyProduct(sensorData.getProduct().getNameOfProduct(),sensorData.getProduct().getValueOfProduct(),tmpPriceFromShop);
             System.out.println("RPC answer:" + resultFromRPCServer);
             sendAnswer(sensorData,resultFromRPCServer);
+            transport.close();
         } catch (TException x) {
             x.printStackTrace();
         }
+    }
+
+    private String makeOneStringInvoice(){
+        String result ="";
+        List<String> tmpList;// = new ArrayList<String>();
+
+        try (TTransport transport = new TSocket(HOST_THRIFT, PORT_THRIFT)){
+            transport.open();
+            TProtocol protocol = new TBinaryProtocol(transport);
+            ShopService.Client client = new ShopService.Client(protocol);
+            //System.out.println("add result:" + client.hello("Test thrift"));
+
+            tmpList = client.getInvoices();
+
+            for(int i = 0 ; i < tmpList.size() ; i++ ){
+                result = result + "<tr><td><h3 style='color:blue' > " + tmpList.get(i) + " </h3></td></tr>";
+            }
+
+            System.out.println("RPC answer: " + result);
+
+            transport.close();
+        } catch (TException x) {
+            x.printStackTrace();
+        }
+
+
+
+        return result;
     }
 
     /**
@@ -138,6 +167,7 @@ public class UDPSocketServer {
         String message = "Don't have a Products";
         String historyURL = "/history";
         String listURL = "/list";
+        String invoiceURL = "/invoice";
         String testBadURL = "/testError";
         String pathForRefresh = "";
         String topic ="";
@@ -152,6 +182,12 @@ public class UDPSocketServer {
                 requestParam = request.split(" ");
                 path = requestParam[1];
                 System.out.println(path);
+                if(path.equals(invoiceURL)){
+                    message = makeOneStringInvoice();
+                    httpStatus = "HTTP/1.1 200";
+                    topic = "Invoise : ";
+                    pathForRefresh = invoiceURL;
+                }
                 if(path.equals(historyURL)){
                     message = makeOneStringHistory();
                     httpStatus = "HTTP/1.1 200";
@@ -167,7 +203,7 @@ public class UDPSocketServer {
                     //testShowList(message);
                 }
                 /** if path not equals /list or /history will be BAD REQUEST with status 400 */
-                if(!path.equals(listURL) && !path.equals(historyURL)){
+                if(!path.equals(listURL) && !path.equals(historyURL) && !path.equals(invoiceURL)){
                     message = "<h1 style='color:red'> BAD REQUEST, ALLOWED ONLY HTTP GET /list or /history REQUESTS </h1>";
                     httpStatus = "HTTP/1.1 400";
                     topic = "<h1 style='color:red'> ERROR </h1>";
@@ -190,9 +226,10 @@ public class UDPSocketServer {
                     + "<title>My Web Server</title></head>"
                     + "<h1>Your request: " + request + "</h3>"
                     + "<table width=\"200\">"
-                    + "<td><h3><a href=\"/list \">list</a></h3></td>"
-                    + "<td><h3><a href=\"/history \">history</a></h3></td>"
-                    + "<td><h3><a href=\"/testError \">testError</a></h3></td>"
+                    + "<td><h3><a href=\"/list \">List</a></h3></td>"
+                    + "<td><h3><a href=\"/history \">History</a></h3></td>"
+                    + "<td><h3><a href=\"/testError \">TestError</a></h3></td>"
+                    + "<td><h3><a href=\"/invoice \">Invoice</a></h3></td>"
                     + "</table>"
                     + "<h1>" + topic + "</h1>"
                     + "<table width=\"200\">"
@@ -286,17 +323,6 @@ public class UDPSocketServer {
         }
     }
 
-    /** Prints to standard out.
-     * @param  address ,  port ,  length ,  product to print.
-     */
-    private void printPacketData(InetAddress address , int port , int length , Product product) throws IOException{
-
-        System.out.println("Received a packet: IP:Port: " + address
-                + ":" + port
-                + ", length: " + length
-                + ", payload: " + product.toString());
-    }
-
     /** Prints actual SensorData to standard out.*/
     private void printActualSensorData() throws IOException , InterruptedException{
 
@@ -359,61 +385,6 @@ public class UDPSocketServer {
             }
         }
     }
-
-
-    /**
-     * compare Data from actualSensorData with response Data
-     * */
-    void testShowList(String message){
-
-        if(message.length() != 0){
-            String[] chekingString = message.split(";");
-            for (int i = 0 ; i < actualSensorDatas.size();i++){
-                String[] chekingInString = chekingString[i].split(" ");
-                if(actualSensorDatas.get(i).getProduct().getNameOfProduct().equals(chekingInString[3])
-                        && actualSensorDatas.get(i).getProduct().getValueOfProduct() == Integer.parseInt(chekingInString[chekingInString.length-1])){
-                    System.out.println("Product name from actualData: >"
-                            + actualSensorDatas.get(i).getProduct().getNameOfProduct()
-                            + "< is same with Product name from request messege >" + chekingInString[3]
-                            + "< and Product value from actualData: >" + actualSensorDatas.get(i).getProduct().getValueOfProduct()
-                            + "< is same with Product value from request message >" + chekingInString[chekingInString.length-1] + "<");
-                }else{
-                    System.out.println("Product name from actualData: >"
-                            + actualSensorDatas.get(i).getProduct().getNameOfProduct()
-                            + "< is NOT same with Product name from request messege >" + chekingInString[3]
-                            + "< and Product value from actualData: >" + actualSensorDatas.get(i).getProduct().getValueOfProduct()
-                            + "< is NOT same with Product value from request message >" + chekingInString[chekingInString.length-1] + "<");
-                }
-            }
-        }
-    }
-
-    /**
-     *  Color test
-     *  Search style color red/blue and value of Product and then compare >0 or ==0
-     * */
-    void testColor(String message,String httpStatus){
-        String styleColorRed = "style='color:red'";
-        String styleColorBlue = "style='color:blue'";
-
-        if(httpStatus.equals("HTTP/1.1 200") && message.length() != 0){
-            String[] chekingString = message.split(";");
-            if(chekingString.length > 0){
-                for(int i = 0 ; i < chekingString.length - 1; i++ ){
-                    System.out.println(chekingString[i]);
-                    String[] chekingInString = chekingString[i].split(" ");
-                    /** Search style color red/blue and value of Product and then compare >0 or ==0 */
-                    if(chekingString[i].contains(styleColorBlue) && Integer.parseInt(chekingInString[chekingInString.length-1]) > 0){
-                        System.out.println("By value "  + chekingInString[chekingInString.length-1] + " is " + styleColorBlue );
-                    }
-                    if(chekingString[i].contains(styleColorRed) && Integer.parseInt(chekingInString[chekingInString.length-1]) == 0){
-                        System.out.println("By value "  + chekingInString[chekingInString.length-1] + " is " + styleColorRed );
-                    }
-                }
-            }
-        }
-    }
-
 
 
 }

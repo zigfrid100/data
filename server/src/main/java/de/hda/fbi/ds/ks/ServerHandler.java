@@ -41,13 +41,14 @@ public class ServerHandler implements ShopService.Iface {
         price = price * random;
         value = value + random;
         //System.out.println("Client buy: " + value +" "+ name  +  "  and pay " + price*value + " money.");
-        history.add("Client buy: " + random +" "+ name  +  "  and pay " + price + " euro.");
-        String temp = "Client buy: " + random +" "+ name  +  "  and pay " + price + " euro.";
+        history.add("Client buy: " + value +" "+ name  +  "  and pay " + price + " euro.");
+        String temp = "Client buy: " + value +" "+ name  +  "  and pay " + price + " euro.";
         return temp;
     }
 
-
-
-
+    @Override
+    public List<String> getInvoices(){
+        return history;
+    }
 
 }
