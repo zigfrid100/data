@@ -99,7 +99,7 @@ public class UDPSocketServer {
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
             ShopService.Client client = new ShopService.Client(protocol);
-            System.out.println("add result:" + client.hello(100, 200));
+            System.out.println("add result:" + client.hello("Test thrift"));
         } catch (TException x) {
             x.printStackTrace();
         }

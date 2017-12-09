@@ -1,10 +1,5 @@
 package de.hda.fbi.ds.ks;
 
-import org.apache.thrift.TException;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.TSocket;
-import org.apache.thrift.transport.TTransport;
 import java.io.IOException;
 
 /**
@@ -92,21 +87,5 @@ public class Main {
 
     }
 
-
-    /** The port the client connects to. */
-    //public static final int PORT = 9090;
-    /** The host the client connects to. */
-    //public static final String HOST = "localhost";
-
-    /**
-     * The main method that actually starts the program.
-     *
-     * @param args The command line arguments.
-     */
-   /* public static void main(String[] args) {
-
-
-        
-    }*/
 
 }

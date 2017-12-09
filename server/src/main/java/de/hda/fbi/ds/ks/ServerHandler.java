@@ -32,6 +32,7 @@ public class ServerHandler implements ShopService.Iface {
 
     @Override
     public  String hello(String name) throws TException{
+        System.out.println("Received: " + name);
         return  "Answer from " + name;
     }
 
@@ -44,7 +45,7 @@ public class ServerHandler implements ShopService.Iface {
     }
 
     @Override
-    public int buyProdact(String name , int value , int price) throws TException {
+    public int buyProduct(String name , int value , int price) throws TException {
         System.out.println("Client buy: " + value +" "+ name  +  "  and pay " + price*value + " money.");
         history.add("Client buy: " + value +" "+ name  +  "  and pay " + price*value + " money.");
         return value;
