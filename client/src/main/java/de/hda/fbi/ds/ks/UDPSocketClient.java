@@ -15,7 +15,8 @@ public class UDPSocketClient {
 
     /** The UDP port the client connects to. */
     private static int SERVER_PORT = 8181;
-
+    /** States the client running. */
+    private boolean running = true;
     /** The UDP socket used to send data. */
     private DatagramSocket udpSocket;
     /** The IP address the client connects to. */
@@ -27,6 +28,8 @@ public class UDPSocketClient {
     private String ipAddresString = "141.100.42.145";
     private String ipAddresLocalhostString = "localhost";
     private String answerFromServer;
+    /** The Product Object. */
+    Product myProduct = new Product();
 
     /**
      * Default constructor that creates, i.e., opens
@@ -66,7 +69,7 @@ public class UDPSocketClient {
             udpSocket.receive(incomingPacket);
             //write answer counter
             this.answerFromServer = new String(incomingPacket.getData());
-
+            handelAnswer(answerFromServer);
             System.out.println("Message sent with payload: " + product.toPrint());
         }  catch (UnknownHostException e) {
             e.printStackTrace();
@@ -77,8 +80,29 @@ public class UDPSocketClient {
         }
     }
 
-    public String getAnswerFromServer(){
-        return answerFromServer;
+    public void handelAnswer(String afs){
+        String[] afsParam;
+        int newValueOfProduct;
+        afsParam = afs.split(" ");
+        newValueOfProduct = Integer.parseInt(afsParam[2]);
+        if(newValueOfProduct > myProduct.getValueOfProduct() && myProduct.getValueOfProduct() < 5){
+            myProduct.setValueOfProduct(newValueOfProduct);
+        }
+    }
+
+    public void run() throws InterruptedException {
+        while(running) {
+           try{
+                // Send the message.
+                for (int i = 0 ; i <= myProduct.getValueOfProduct();){
+                    Thread.sleep(4000);
+                    sendMsg(myProduct);
+                    myProduct.reduce();
+                }
+            } catch (IOException e) {
+                System.out.println("Could not receive datagram.\n" + e.getLocalizedMessage());
+            }
+        }
     }
 
 }

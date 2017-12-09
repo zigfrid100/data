@@ -57,8 +57,7 @@ public class Main {
 
                 /** The UDP socket client. */
                 UDPSocketClient udpSocketClient = null;
-                /** The Product Object. */
-                Product myProduct = new Product();
+
 
 
                 try {
@@ -68,14 +67,9 @@ public class Main {
                     System.exit(1);
                 }
 
-                // Send the message.
-                for (int i = 0 ; i <= myProduct.getValueOfProduct();){
-                    Thread.sleep(4000);
-                    udpSocketClient.sendMsg(myProduct);
-                    myProduct.reduce();
+                udpSocketClient.run();
 
-                }
-                break;
+
             case 3:
                 System.out.println("Exit selected");
                 break;

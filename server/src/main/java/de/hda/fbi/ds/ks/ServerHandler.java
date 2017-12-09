@@ -1,10 +1,8 @@
 package de.hda.fbi.ds.ks;
 
 import org.apache.thrift.TException;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * The server handler that implements the
@@ -12,22 +10,7 @@ import java.util.Random;
  * the incoming RPC messages.
  */
 public class ServerHandler implements ShopService.Iface {
-  /*  @Override
-    public void ping() throws TException {
 
-    }
-
-    @Override
-    public int addTwo(int num1, int num2) throws TException {
-        System.out.println("Received: " + num1 + ", " + num2);
-        return num1 + num2;
-    }
-
-    @Override
-    public Result addOne(Operands operands) throws TException {
-        return null;
-    }
-  */
     List<String> history = new ArrayList<String>();
 
     @Override
@@ -39,16 +22,28 @@ public class ServerHandler implements ShopService.Iface {
     @Override
     public int getPriceByName(String name) throws TException{
         //note a single Random object is reused here
+        int min = 2;
+        int max = 20;
+        int random = (int )(Math.random() * max + min);
+        /*
         Random randomGenerator = new Random();
-        int randomInt = randomGenerator.nextInt(100);
-        return randomInt;
+        int randomInt = randomGenerator.nextInt(100);*/
+        return random;
     }
 
     @Override
-    public int buyProduct(String name , int value , int price) throws TException {
-        System.out.println("Client buy: " + value +" "+ name  +  "  and pay " + price*value + " money.");
-        history.add("Client buy: " + value +" "+ name  +  "  and pay " + price*value + " money.");
-        return value;
+    public String buyProduct(String name , int value , int price) throws TException {
+
+        int min = 10;
+        int max = 20;
+        int random = (int )(Math.random() * max + min);
+
+        price = price * random;
+        value = value + random;
+        //System.out.println("Client buy: " + value +" "+ name  +  "  and pay " + price*value + " money.");
+        history.add("Client buy: " + random +" "+ name  +  "  and pay " + price + " euro.");
+        String temp = "Client buy: " + random +" "+ name  +  "  and pay " + price + " euro.";
+        return temp;
     }
 
 

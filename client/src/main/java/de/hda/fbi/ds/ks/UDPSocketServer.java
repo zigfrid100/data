@@ -46,6 +46,8 @@ public class UDPSocketServer {
     public static final int PORT_THRIFT = 9090;
     /** The host the client connects to. */
     public static final String HOST_THRIFT = "localhost";
+    /** The port the client connects to. */
+    public static final int MIN_VALUE_OF_PRODUCT = 5;
 
     /**
      * Default constructor that creates, i.e., opens
@@ -85,7 +87,9 @@ public class UDPSocketServer {
                 showWeb();
 
                 //test thrift
-                makeOrder();
+                //makeOrder();
+                //checking value of product
+                checkingValueOfProduct();
 
             } catch (IOException e) {
                 System.out.println("Could not receive datagram.\n" + e.getLocalizedMessage());
@@ -93,13 +97,25 @@ public class UDPSocketServer {
         }
     }
 
+    private void checkingValueOfProduct() throws IOException{
+        for(SensorData sensorData : actualSensorDatas){
+            if(sensorData.getProduct().getValueOfProduct() < MIN_VALUE_OF_PRODUCT ){
+               makeOrder(sensorData);
+            }
+        }
+    }
+
     // Wahrscheinlich muss Rückgabewert als Product sein
-    private void makeOrder(){
+    private void makeOrder(SensorData sensorData)throws IOException{
         try (TTransport transport = new TSocket(HOST_THRIFT, PORT_THRIFT)){
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
             ShopService.Client client = new ShopService.Client(protocol);
-            System.out.println("add result:" + client.hello("Test thrift"));
+            //System.out.println("add result:" + client.hello("Test thrift"));
+            int tmpPriceFromShop = client.getPriceByName(sensorData.getProduct().nameOfProduct);
+            String resultFromRPCServer = client.buyProduct(sensorData.getProduct().getNameOfProduct(),sensorData.getProduct().getValueOfProduct(),tmpPriceFromShop);
+            System.out.println("RPC answer:" + resultFromRPCServer);
+            sendAnswer(sensorData,resultFromRPCServer);
         } catch (TException x) {
             x.printStackTrace();
         }
@@ -197,58 +213,6 @@ public class UDPSocketServer {
 
     }
 
-    /**
-     * compare Data from actualSensorData with response Data
-     * */
-    void testShowList(String message){
-
-        if(message.length() != 0){
-            String[] chekingString = message.split(";");
-            for (int i = 0 ; i < actualSensorDatas.size();i++){
-                String[] chekingInString = chekingString[i].split(" ");
-                if(actualSensorDatas.get(i).getProduct().getNameOfProduct().equals(chekingInString[3])
-                        && actualSensorDatas.get(i).getProduct().getValueOfProduct() == Integer.parseInt(chekingInString[chekingInString.length-1])){
-                    System.out.println("Product name from actualData: >"
-                            + actualSensorDatas.get(i).getProduct().getNameOfProduct()
-                            + "< is same with Product name from request messege >" + chekingInString[3]
-                            + "< and Product value from actualData: >" + actualSensorDatas.get(i).getProduct().getValueOfProduct()
-                            + "< is same with Product value from request message >" + chekingInString[chekingInString.length-1] + "<");
-                }else{
-                    System.out.println("Product name from actualData: >"
-                            + actualSensorDatas.get(i).getProduct().getNameOfProduct()
-                            + "< is NOT same with Product name from request messege >" + chekingInString[3]
-                            + "< and Product value from actualData: >" + actualSensorDatas.get(i).getProduct().getValueOfProduct()
-                            + "< is NOT same with Product value from request message >" + chekingInString[chekingInString.length-1] + "<");
-                }
-            }
-        }
-    }
-
-    /**
-     *  Color test
-     *  Search style color red/blue and value of Product and then compare >0 or ==0
-     * */
-    void testColor(String message,String httpStatus){
-        String styleColorRed = "style='color:red'";
-        String styleColorBlue = "style='color:blue'";
-
-        if(httpStatus.equals("HTTP/1.1 200") && message.length() != 0){
-            String[] chekingString = message.split(";");
-            if(chekingString.length > 0){
-                for(int i = 0 ; i < chekingString.length - 1; i++ ){
-                    System.out.println(chekingString[i]);
-                    String[] chekingInString = chekingString[i].split(" ");
-                    /** Search style color red/blue and value of Product and then compare >0 or ==0 */
-                    if(chekingString[i].contains(styleColorBlue) && Integer.parseInt(chekingInString[chekingInString.length-1]) > 0){
-                        System.out.println("By value "  + chekingInString[chekingInString.length-1] + " is " + styleColorBlue );
-                    }
-                    if(chekingString[i].contains(styleColorRed) && Integer.parseInt(chekingInString[chekingInString.length-1]) == 0){
-                        System.out.println("By value "  + chekingInString[chekingInString.length-1] + " is " + styleColorRed );
-                    }
-                }
-            }
-        }
-    }
 
     /**
      * generate String for webServer
@@ -284,18 +248,16 @@ public class UDPSocketServer {
         return result;
     }
 
-    private void sendAnswer(SensorData sensorData) throws IOException{
+    private void sendAnswer(SensorData sensorData, String newValueOfProduct) throws IOException{
 
         /** The IP address and port from client . */
         InetAddress address = sensorData.getAddress();
         int port = sensorData.getPortNummber();
         //increment for check
-        String message = " " + receivedPacketsCounter;
+        String message = newValueOfProduct;
         data = message.getBytes();
         DatagramPacket sendPacket  = new DatagramPacket(data, data.length, address, port);
         udpSocket.send(sendPacket);
-        ++receivedPacketsCounter;
-
     }
 
     /**
@@ -315,7 +277,8 @@ public class UDPSocketServer {
         try {
             Product product = (Product)iStream.readObject();
             saveSensorData(address,port,product,length);
-            sendAnswer(new SensorData(product,port,address,length));
+            String tmp = "Client buy: " + "0 " + "no"  +  " and pay " + "no" + " euro.";
+            sendAnswer(new SensorData(product,port,address,length),tmp);
             iStream.close();
             //printPacketData(address,port,length,product);
         } catch (ClassNotFoundException e) {
@@ -396,6 +359,61 @@ public class UDPSocketServer {
             }
         }
     }
+
+
+    /**
+     * compare Data from actualSensorData with response Data
+     * */
+    void testShowList(String message){
+
+        if(message.length() != 0){
+            String[] chekingString = message.split(";");
+            for (int i = 0 ; i < actualSensorDatas.size();i++){
+                String[] chekingInString = chekingString[i].split(" ");
+                if(actualSensorDatas.get(i).getProduct().getNameOfProduct().equals(chekingInString[3])
+                        && actualSensorDatas.get(i).getProduct().getValueOfProduct() == Integer.parseInt(chekingInString[chekingInString.length-1])){
+                    System.out.println("Product name from actualData: >"
+                            + actualSensorDatas.get(i).getProduct().getNameOfProduct()
+                            + "< is same with Product name from request messege >" + chekingInString[3]
+                            + "< and Product value from actualData: >" + actualSensorDatas.get(i).getProduct().getValueOfProduct()
+                            + "< is same with Product value from request message >" + chekingInString[chekingInString.length-1] + "<");
+                }else{
+                    System.out.println("Product name from actualData: >"
+                            + actualSensorDatas.get(i).getProduct().getNameOfProduct()
+                            + "< is NOT same with Product name from request messege >" + chekingInString[3]
+                            + "< and Product value from actualData: >" + actualSensorDatas.get(i).getProduct().getValueOfProduct()
+                            + "< is NOT same with Product value from request message >" + chekingInString[chekingInString.length-1] + "<");
+                }
+            }
+        }
+    }
+
+    /**
+     *  Color test
+     *  Search style color red/blue and value of Product and then compare >0 or ==0
+     * */
+    void testColor(String message,String httpStatus){
+        String styleColorRed = "style='color:red'";
+        String styleColorBlue = "style='color:blue'";
+
+        if(httpStatus.equals("HTTP/1.1 200") && message.length() != 0){
+            String[] chekingString = message.split(";");
+            if(chekingString.length > 0){
+                for(int i = 0 ; i < chekingString.length - 1; i++ ){
+                    System.out.println(chekingString[i]);
+                    String[] chekingInString = chekingString[i].split(" ");
+                    /** Search style color red/blue and value of Product and then compare >0 or ==0 */
+                    if(chekingString[i].contains(styleColorBlue) && Integer.parseInt(chekingInString[chekingInString.length-1]) > 0){
+                        System.out.println("By value "  + chekingInString[chekingInString.length-1] + " is " + styleColorBlue );
+                    }
+                    if(chekingString[i].contains(styleColorRed) && Integer.parseInt(chekingInString[chekingInString.length-1]) == 0){
+                        System.out.println("By value "  + chekingInString[chekingInString.length-1] + " is " + styleColorRed );
+                    }
+                }
+            }
+        }
+    }
+
 
 
 }

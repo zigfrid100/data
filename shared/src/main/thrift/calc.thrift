@@ -17,9 +17,10 @@ service Calc {
   Result addOne(1: Operands operands)
 }
 */
+
 service ShopService {  // defines the service to add two numbers
 
 	    string hello(1:string name),
 	    int getPriceByName(1:string name),
-	    int buyProduct(1:string name, 2:int value,3:int price),
+	    string buyProduct(1:string name, 2:int value,3:int price),
 }
