@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>de.hda.fbi.ds.mbredel</groupId>
+        <groupId>de.hda.fbi.ds.ks</groupId>
         <artifactId>thrift</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
@@ -37,7 +37,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>de.hda.fbi.ds.mbredel.Main</mainClass>
+                                    <mainClass>de.hda.fbi.ds.ks.Main</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
