@@ -98,8 +98,8 @@ public class UDPSocketServer {
         try (TTransport transport = new TSocket(HOST_THRIFT, PORT_THRIFT)){
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
-            Calc.Client client = new Calc.Client(protocol);
-            System.out.println("add result:" + client.addTwo(100, 200));
+            ShopService.Client client = new ShopService.Client(protocol);
+            System.out.println("add result:" + client.hello(100, 200));
         } catch (TException x) {
             x.printStackTrace();
         }
