@@ -89,7 +89,7 @@ public class UDPSocketServer {
                 //test thrift
                 //makeOrder();
                 //checking value of product
-                checkingValueOfProduct();
+                //checkingValueOfProduct();
 
             } catch (IOException e) {
                 System.out.println("Could not receive datagram.\n" + e.getLocalizedMessage());
@@ -105,7 +105,7 @@ public class UDPSocketServer {
         }
     }
 
-    // Wahrscheinlich muss Rückgabewert als Product sein
+
     private void makeOrder(SensorData sensorData)throws IOException{
         try (TTransport transport = new TSocket(HOST_THRIFT, PORT_THRIFT)){
             transport.open();
@@ -116,6 +116,11 @@ public class UDPSocketServer {
             String resultFromRPCServer = client.buyProduct(sensorData.getProduct().getNameOfProduct(),sensorData.getProduct().getValueOfProduct(),tmpPriceFromShop);
             System.out.println("RPC answer:" + resultFromRPCServer);
             sendAnswer(sensorData,resultFromRPCServer);
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             transport.close();
         } catch (TException x) {
             x.printStackTrace();
@@ -145,9 +150,20 @@ public class UDPSocketServer {
             x.printStackTrace();
         }
 
-
-
         return result;
+    }
+
+
+    private void manuelOrder(String sensorDataIndex) throws IOException {
+        //String[] sensorDataIndex = path.split(":");
+/*
+        if(sensorDataIndex.length > 0){
+            for(String temp : sensorDataIndex){
+                System.out.println(temp);
+            }
+       }*/
+        int sDataIndex = Integer.parseInt(sensorDataIndex);
+        makeOrder(actualSensorDatas.get(sDataIndex));
     }
 
     /**
@@ -163,12 +179,15 @@ public class UDPSocketServer {
         String request;
         String response;
         String[] requestParam;
+        String[] requestParamButton;
         String path;
+        String sensorDataIndex;
         String message = "Don't have a Products";
         String historyURL = "/history";
         String listURL = "/list";
         String invoiceURL = "/invoice";
         String testBadURL = "/testError";
+        String buyForURL = "/buyFor";
         String pathForRefresh = "";
         String topic ="";
         //For test Status
@@ -179,9 +198,27 @@ public class UDPSocketServer {
             bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             request = bufferedReader.readLine();
             if(!request.isEmpty()){
+                System.out.println(request);
                 requestParam = request.split(" ");
                 path = requestParam[1];
                 System.out.println(path);
+                if(!path.isEmpty()){
+                    requestParamButton = path.split(":");
+                    System.out.println("requestParamButton lenght is : " + requestParamButton.length
+                            + " last index have " + requestParamButton[requestParamButton.length - 1]);
+                    sensorDataIndex = requestParamButton[requestParamButton.length - 1];
+                }else{
+                    sensorDataIndex = "0";
+                }
+                //sensorDataIndex = "0";
+
+                if(path.contains(buyForURL)){
+                    manuelOrder(sensorDataIndex);
+                    message = makeOneStringList();
+                    httpStatus = "HTTP/1.1 200";
+                    topic = "List of products : ";
+                    pathForRefresh = listURL;
+                }
                 if(path.equals(invoiceURL)){
                     message = makeOneStringInvoice();
                     httpStatus = "HTTP/1.1 200";
@@ -203,7 +240,7 @@ public class UDPSocketServer {
                     //testShowList(message);
                 }
                 /** if path not equals /list or /history will be BAD REQUEST with status 400 */
-                if(!path.equals(listURL) && !path.equals(historyURL) && !path.equals(invoiceURL)){
+                if(!path.equals(listURL) && !path.equals(historyURL) && !path.equals(invoiceURL) && !path.contains(buyForURL)){
                     message = "<h1 style='color:red'> BAD REQUEST, ALLOWED ONLY HTTP GET /list or /history REQUESTS </h1>";
                     httpStatus = "HTTP/1.1 400";
                     topic = "<h1 style='color:red'> ERROR </h1>";
@@ -220,7 +257,7 @@ public class UDPSocketServer {
             out.println("Content-type: text/html");
             out.println("Server-name: myServer");
             response = "<html>" + "<head>"
-                    + "<meta http-equiv='refresh' content='2'; url=localhost:8282" + pathForRefresh + ">"
+                    + "<meta http-equiv=\"refresh\" content=\"2\"; url=localhost:8282" + pathForRefresh + ">"
                     + "<meta charset='utf-8'>" // Umlauts
                     + "<link rel=\"icon\" href=\"data:;base64,iVBORw0KGgo=\">" // How to prevent favicon.ico requests?
                     + "<title>My Web Server</title></head>"
@@ -230,6 +267,7 @@ public class UDPSocketServer {
                     + "<td><h3><a href=\"/history \">History</a></h3></td>"
                     + "<td><h3><a href=\"/testError \">TestError</a></h3></td>"
                     + "<td><h3><a href=\"/invoice \">Invoice</a></h3></td>"
+                    + "<td><h3><a href=\"/buyFor \">BuyFor</a></h3></td>"
                     + "</table>"
                     + "<h1>" + topic + "</h1>"
                     + "<table width=\"200\">"
@@ -260,9 +298,9 @@ public class UDPSocketServer {
 
         for(int i = 0 ; i < actualSensorDatas.size() ; i++ ){
             if(actualSensorDatas.get(i).getProduct().getValueOfProduct() == 0){
-                result = result + "<tr><td><h3 style='color:red' > " + actualSensorDatas.get(i).getProduct().getNameOfProduct() + " </h3></td><td><h3 style='color:red'> " + actualSensorDatas.get(i).getProduct().getValueOfProduct() + " ;</h3></td></tr>";
+                result = result + "<tr><td><h3 style='color:red' > " + actualSensorDatas.get(i).getProduct().getNameOfProduct() + " </h3></td><td><h3 style='color:red'> " + actualSensorDatas.get(i).getProduct().getValueOfProduct() + " ;</h3></td><td><h3><a href=\"/buyFor:"+i+"\">Order</a></h3></td></tr>";
             }else{
-                result = result + "<tr><td><h3 style='color:blue' > " + actualSensorDatas.get(i).getProduct().getNameOfProduct() + " </h3></td><td><h3 style='color:blue' > " + actualSensorDatas.get(i).getProduct().getValueOfProduct() + " ;</h3></td></tr>";
+                result = result + "<tr><td><h3 style='color:blue' > " + actualSensorDatas.get(i).getProduct().getNameOfProduct() + " </h3></td><td><h3 style='color:blue' > " + actualSensorDatas.get(i).getProduct().getValueOfProduct() + " ;</h3></td><td><h3><a href=\"/buyFor:"+i+"\">Order</a></h3></td></tr>";
             }
         }
         return result;
@@ -313,6 +351,9 @@ public class UDPSocketServer {
         ObjectInputStream iStream = new ObjectInputStream(new ByteArrayInputStream(udpPacket.getData()));
         try {
             Product product = (Product)iStream.readObject();
+            if(product.getValueOfProduct() < MIN_VALUE_OF_PRODUCT){
+                makeOrder(new SensorData(product,port,address,length));
+            }
             saveSensorData(address,port,product,length);
             String tmp = "Client buy: " + "0 " + "no"  +  " and pay " + "no" + " euro.";
             sendAnswer(new SensorData(product,port,address,length),tmp);

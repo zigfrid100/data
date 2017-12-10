@@ -71,6 +71,7 @@ public class UDPSocketClient {
             this.answerFromServer = new String(incomingPacket.getData());
             handelAnswer(answerFromServer);
             System.out.println("Message sent with payload: " + product.toPrint());
+            Thread.sleep(4000);
         }  catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (SocketException e) {
@@ -85,7 +86,7 @@ public class UDPSocketClient {
         int newValueOfProduct;
         afsParam = afs.split(" ");
         newValueOfProduct = Integer.parseInt(afsParam[2]);
-        if(newValueOfProduct > myProduct.getValueOfProduct() && myProduct.getValueOfProduct() < 5){
+        if(newValueOfProduct > 0){// myProduct.getValueOfProduct() && myProduct.getValueOfProduct() < 5){
             myProduct.setValueOfProduct(newValueOfProduct);
         }
     }
