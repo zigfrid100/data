@@ -24,6 +24,12 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        /**
+         TServer server = new TThreadPoolServer(TThreadPoolServer.Args(serverTransport).processor(processor));
+
+
+         */
     }
 
     /**
