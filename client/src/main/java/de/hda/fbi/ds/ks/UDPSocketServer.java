@@ -108,7 +108,7 @@ public class UDPSocketServer {
 
 
     private void makeOrder(SensorData sensorData)throws IOException{
-        try (TTransport transport = new TSocket(HOST_THRIFT, PORT_THRIFT)){
+        try (TTransport transport = new TSocket(HOST_THRIFT_NEZWORK, PORT_THRIFT)){
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
             ShopService.Client client = new ShopService.Client(protocol);
