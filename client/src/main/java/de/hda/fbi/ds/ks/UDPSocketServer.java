@@ -18,6 +18,12 @@ import org.apache.thrift.transport.TTransport;
 /**
  * Created by zigfrid on 13.11.17.
  */
+
+// 1-1000 Bestelungen - Perfomens test  :  1- 3001ms    10-30024ms. 100 - 300353ms. DONE
+// anzahl angekommenen Producten muss mit anzahl bestellten Producten miteinander stimmen - funvtionaler test(unit test)
+// anzahl bestellungen gleich anzahl rechnungen
+// die Name von Bestellte Produkt muss glech mit geliferte Produkt srin
+
 public class UDPSocketServer {
 
 
@@ -47,8 +53,11 @@ public class UDPSocketServer {
     /** The host the client connects to. */
     public static final String HOST_THRIFT = "localhost";
     public static final String HOST_THRIFT_NEZWORK = "10.211.55.4";
-    /** The port the client connects to. */
+    /** MIN und MAX number of product */
     public static final int MIN_VALUE_OF_PRODUCT = 5;
+    public static final int MAX_VALUE_OF_PRODUCT = 50;
+    /** test number of orders for loop */
+    public static final int NUMBER_OF_ORDERS = 1;
 
     /**
      * Default constructor that creates, i.e., opens
@@ -87,10 +96,8 @@ public class UDPSocketServer {
                 //start Web Server
                 showWeb();
 
-                //test thrift
-                //makeOrder();
-                //checking value of product
-                //checkingValueOfProduct();
+                // 1-1000 Bestelungen - Perfomens test
+                timeForOrderTest();
 
             } catch (IOException e) {
                 System.out.println("Could not receive datagram.\n" + e.getLocalizedMessage());
@@ -98,12 +105,30 @@ public class UDPSocketServer {
         }
     }
 
-    private void checkingValueOfProduct() throws IOException{
-        for(SensorData sensorData : actualSensorDatas){
-            if(sensorData.getProduct().getValueOfProduct() < MIN_VALUE_OF_PRODUCT ){
-               makeOrder(sensorData);
+    private void timeForOrderTest() throws IOException{
+        Timer timer = new Timer();
+
+
+        for(int i = 0 ; i < NUMBER_OF_ORDERS ; i++){
+            try (TTransport transport = new TSocket(HOST_THRIFT, PORT_THRIFT)){
+                transport.open();
+                TProtocol protocol = new TBinaryProtocol(transport);
+                ShopService.Client client = new ShopService.Client(protocol);
+                String resultFromRPCServer = client.buyProduct(actualSensorDatas.get(actualSensorDatas.size()-1).getProduct().getNameOfProduct(),actualSensorDatas.get(actualSensorDatas.size()-1).getProduct().getValueOfProduct(),10);
+                System.out.println("RPC answer:" + resultFromRPCServer);
+                sendAnswer(actualSensorDatas.get(actualSensorDatas.size()-1),resultFromRPCServer);
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                transport.close();
+            } catch (TException x) {
+                x.printStackTrace();
             }
         }
+        timer.getEndTime();
+        System.out.println("Time is: " + timer.counting() + " ms");
     }
 
 
@@ -164,7 +189,9 @@ public class UDPSocketServer {
             }
        }*/
         int sDataIndex = Integer.parseInt(sensorDataIndex);
-        makeOrder(actualSensorDatas.get(sDataIndex));
+        if(MAX_VALUE_OF_PRODUCT < actualSensorDatas.get(sDataIndex).getProduct().getValueOfProduct()){
+            makeOrder(actualSensorDatas.get(sDataIndex));
+        }
     }
 
     /**
