@@ -38,7 +38,7 @@ public class UDPSocketClient {
      * @throws IOException In case the socket cannot be created.
      */
     public UDPSocketClient() throws IOException {
-        address = InetAddress.getByName(ipAddresLocalhostString);
+        address = InetAddress.getByName(ipAddresString);
         udpSocket = new DatagramSocket();
         System.out.println("Started the UDP socket that connects to " + address.getHostAddress());
     }
@@ -71,7 +71,7 @@ public class UDPSocketClient {
             this.answerFromServer = new String(incomingPacket.getData());
             handelAnswer(answerFromServer);
             System.out.println("Message sent with payload: " + product.toPrint());
-            Thread.sleep(4000);
+            Thread.sleep(6000);
         }  catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (SocketException e) {

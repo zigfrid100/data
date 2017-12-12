@@ -27,7 +27,7 @@ public class Main {
 
         /**
          TServer server = new TThreadPoolServer(TThreadPoolServer.Args(serverTransport).processor(processor));
-
+         server.serve();
 
          */
     }

@@ -46,6 +46,7 @@ public class UDPSocketServer {
     public static final int PORT_THRIFT = 9090;
     /** The host the client connects to. */
     public static final String HOST_THRIFT = "localhost";
+    public static final String HOST_THRIFT_NEZWORK = "10.211.55.4";
     /** The port the client connects to. */
     public static final int MIN_VALUE_OF_PRODUCT = 5;
 
@@ -131,7 +132,7 @@ public class UDPSocketServer {
         String result ="";
         List<String> tmpList;// = new ArrayList<String>();
 
-        try (TTransport transport = new TSocket(HOST_THRIFT, PORT_THRIFT)){
+        try (TTransport transport = new TSocket(HOST_THRIFT_NEZWORK, PORT_THRIFT)){
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
             ShopService.Client client = new ShopService.Client(protocol);
