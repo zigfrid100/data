@@ -108,7 +108,7 @@ public class UDPSocketServer {
 
 
     private void makeOrder(SensorData sensorData)throws IOException{
-        try (TTransport transport = new TSocket(HOST_THRIFT_NEZWORK, PORT_THRIFT)){
+        try (TTransport transport = new TSocket(HOST_THRIFT, PORT_THRIFT)){
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
             ShopService.Client client = new ShopService.Client(protocol);
@@ -132,7 +132,7 @@ public class UDPSocketServer {
         String result ="";
         List<String> tmpList;// = new ArrayList<String>();
 
-        try (TTransport transport = new TSocket(HOST_THRIFT_NEZWORK, PORT_THRIFT)){
+        try (TTransport transport = new TSocket(HOST_THRIFT, PORT_THRIFT)){
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
             ShopService.Client client = new ShopService.Client(protocol);
