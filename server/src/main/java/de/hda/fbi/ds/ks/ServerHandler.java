@@ -21,26 +21,15 @@ public class ServerHandler implements ShopService.Iface {
 
     @Override
     public int getPriceByName(String name) throws TException{
-        //note a single Random object is reused here
         int min = 2;
         int max = 20;
         int random = (int )(Math.random() * max + min);
-        /*
-        Random randomGenerator = new Random();
-        int randomInt = randomGenerator.nextInt(100);*/
         return random;
     }
 
     @Override
     public String buyProduct(String name , int value , int price) throws TException {
-
-        int min = 10;
-        int max = 20;
-        int random = (int )(Math.random() * max + min);
-
-        price = price * random;
-        value = value + random;
-        //System.out.println("Client buy: " + value +" "+ name  +  "  and pay " + price*value + " money.");
+        price = price * value;
         history.add("Client buy: " + value +" "+ name  +  "  and pay " + price + " euro.");
         String temp = "Client buy: " + value +" "+ name  +  "  and pay " + price + " euro.";
         return temp;

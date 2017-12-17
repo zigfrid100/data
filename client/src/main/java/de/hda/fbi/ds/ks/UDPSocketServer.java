@@ -19,10 +19,10 @@ import org.apache.thrift.transport.TTransport;
  * Created by zigfrid on 13.11.17.
  */
 
-// 1-1000 Bestelungen - Perfomens test  :  1- 3001ms    10-30024ms. 100 - 300353ms. DONE
-// anzahl angekommenen Producten muss mit anzahl bestellten Producten miteinander stimmen - funvtionaler test(unit test)
-// anzahl bestellungen gleich anzahl rechnungen
-// die Name von Bestellte Produkt muss glech mit geliferte Produkt srin
+// 1-1000 Bestelungen :  1- 3001ms    10-30024ms. 100 - 300353ms. DONE
+// Anzahl ankommenden Produkten mussen mit anzahl bestellten Produkten miteinander stimmen
+// Anzahl der Bestellungen soll gleich anzahl der Rechnungen sein
+// Die bestellte Produktname soll glech mit geliferte Produktname sein
 
 public class UDPSocketServer {
 
@@ -52,13 +52,13 @@ public class UDPSocketServer {
     public static final int PORT_THRIFT = 9090;
     /** The host the client connects to. */
     public static final String HOST_THRIFT = "localhost";
-    public static final String HOST_THRIFT_NEZWORK = "10.211.55.4";
+    public static final String HOST_THRIFT_NETWORK = "10.211.55.4";
     /** MIN und MAX number of product */
     public static final int MIN_VALUE_OF_PRODUCT = 5;
     public static final int MAX_VALUE_OF_PRODUCT = 50;
     /** test number of orders for loop */
-    public static final int NUMBER_OF_ORDERS = 1;
-
+    public static final int NUMBER_OF_ORDERS = 3;
+    public static final boolean TEST_BOOL = true;
     /**
      * Default constructor that creates, i.e., opens
      * the socket.
@@ -97,26 +97,45 @@ public class UDPSocketServer {
                 showWeb();
 
                 // 1-1000 Bestelungen - Perfomens test
-                timeForOrderTest();
+                if(TEST_BOOL){
+                    orderTest();
+                }
+
 
             } catch (IOException e) {
                 System.out.println("Could not receive datagram.\n" + e.getLocalizedMessage());
             }
         }
     }
-
-    private void timeForOrderTest() throws IOException{
+    /**
+     * measure time for order
+     * check value and name of Product
+     * check number of orders and number of invoices
+     **/
+    private void orderTest() throws IOException{
         Timer timer = new Timer();
-
+        int helpCounter = 0;
+        List<String> tmpList;
+        int min = 15;
+        int max = 30;
 
         for(int i = 0 ; i < NUMBER_OF_ORDERS ; i++){
             try (TTransport transport = new TSocket(HOST_THRIFT, PORT_THRIFT)){
                 transport.open();
                 TProtocol protocol = new TBinaryProtocol(transport);
                 ShopService.Client client = new ShopService.Client(protocol);
-                String resultFromRPCServer = client.buyProduct(actualSensorDatas.get(actualSensorDatas.size()-1).getProduct().getNameOfProduct(),actualSensorDatas.get(actualSensorDatas.size()-1).getProduct().getValueOfProduct(),10);
+                int random = (int )(Math.random() * max + min);
+                String resultFromRPCServer = client.buyProduct(actualSensorDatas.get(actualSensorDatas.size()-1).getProduct().getNameOfProduct(),random,10);
+                tmpList = client.getInvoices();
+                helpCounter = helpCounter + 1;
                 System.out.println("RPC answer:" + resultFromRPCServer);
+                if(helpCounter == tmpList.size()){
+                    System.out.println("Number of orders " + helpCounter + " is equal with number of invoices " + tmpList.size());
+                }else{
+                    System.out.println("Number of orders " + helpCounter + " is not equal with number of invoices " + tmpList.size());
+                }
                 sendAnswer(actualSensorDatas.get(actualSensorDatas.size()-1),resultFromRPCServer);
+                testNameAndValue(resultFromRPCServer, actualSensorDatas.get(actualSensorDatas.size()-1));
                 try {
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
@@ -131,15 +150,22 @@ public class UDPSocketServer {
         System.out.println("Time is: " + timer.counting() + " ms");
     }
 
-
+    /**
+     * make new connection to the RPC Server and call buyProduct function
+     * choice new value of product
+     * */
     private void makeOrder(SensorData sensorData)throws IOException{
         try (TTransport transport = new TSocket(HOST_THRIFT, PORT_THRIFT)){
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
             ShopService.Client client = new ShopService.Client(protocol);
-            //System.out.println("add result:" + client.hello("Test thrift"));
             int tmpPriceFromShop = client.getPriceByName(sensorData.getProduct().nameOfProduct);
-            String resultFromRPCServer = client.buyProduct(sensorData.getProduct().getNameOfProduct(),sensorData.getProduct().getValueOfProduct(),tmpPriceFromShop);
+            int min = 15;
+            int max = 30;
+            int random = (int )(Math.random() * max + min);
+            String resultFromRPCServer = client.buyProduct(sensorData.getProduct().getNameOfProduct(),random,tmpPriceFromShop);
+            // check name and value of ordered Product
+            testNameAndValue(resultFromRPCServer, sensorData);
             System.out.println("RPC answer:" + resultFromRPCServer);
             sendAnswer(sensorData,resultFromRPCServer);
             try {
@@ -152,17 +178,38 @@ public class UDPSocketServer {
             x.printStackTrace();
         }
     }
+    /**
+     * check name and value of ordered Product
+     * */
+    private void testNameAndValue(String resultFromRPCServer , SensorData sensorData){
+        if(resultFromRPCServer.contains(sensorData.getProduct().getNameOfProduct())){
+            System.out.println("Name of Product is same");
+        }else{
+            System.out.println("Name of Product is not same");
+        }
 
+        if(resultFromRPCServer.contains(""+sensorData.getProduct().getValueOfProduct())){
+            System.out.println("Value of Product is equal");
+        }else{
+            System.out.println("Value of Product is not equal");
+        }
+
+
+    }
+
+
+    /**
+     * generate String for webServer
+     * for path /invoice
+     * */
     private String makeOneStringInvoice(){
         String result ="";
-        List<String> tmpList;// = new ArrayList<String>();
+        List<String> tmpList;
 
         try (TTransport transport = new TSocket(HOST_THRIFT, PORT_THRIFT)){
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
             ShopService.Client client = new ShopService.Client(protocol);
-            //System.out.println("add result:" + client.hello("Test thrift"));
-
             tmpList = client.getInvoices();
 
             for(int i = 0 ; i < tmpList.size() ; i++ ){
@@ -181,13 +228,7 @@ public class UDPSocketServer {
 
 
     private void manuelOrder(String sensorDataIndex) throws IOException {
-        //String[] sensorDataIndex = path.split(":");
-/*
-        if(sensorDataIndex.length > 0){
-            for(String temp : sensorDataIndex){
-                System.out.println(temp);
-            }
-       }*/
+
         int sDataIndex = Integer.parseInt(sensorDataIndex);
         if(MAX_VALUE_OF_PRODUCT < actualSensorDatas.get(sDataIndex).getProduct().getValueOfProduct()){
             makeOrder(actualSensorDatas.get(sDataIndex));
@@ -351,6 +392,9 @@ public class UDPSocketServer {
         return result;
     }
 
+    /**
+     * send Answer to the Sensor with new value of product
+     * */
     private void sendAnswer(SensorData sensorData, String newValueOfProduct) throws IOException{
 
         /** The IP address and port from client . */
