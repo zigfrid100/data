@@ -19,11 +19,6 @@ import org.apache.thrift.transport.TTransport;
  * Created by zigfrid on 13.11.17.
  */
 
-// 1-1000 Bestelungen :  1- 3001ms    10-30024ms. 100 - 300353ms. DONE
-// Anzahl ankommenden Produkten mussen mit anzahl bestellten Produkten miteinander stimmen
-// Anzahl der Bestellungen soll gleich anzahl der Rechnungen sein
-// Die bestellte Produktname soll glech mit geliferte Produktname sein
-
 public class UDPSocketServer {
 
 
@@ -96,7 +91,7 @@ public class UDPSocketServer {
                 //start Web Server
                 showWeb();
 
-                // 1-1000 Bestelungen - Perfomens test
+                // Start Tests
                 if(TEST_BOOL){
                     orderTest();
                 }
@@ -135,7 +130,7 @@ public class UDPSocketServer {
                     System.out.println("Number of orders " + helpCounter + " is not equal with number of invoices " + tmpList.size());
                 }
                 sendAnswer(actualSensorDatas.get(actualSensorDatas.size()-1),resultFromRPCServer);
-                testNameAndValue(resultFromRPCServer, actualSensorDatas.get(actualSensorDatas.size()-1));
+                testNameAndValue(resultFromRPCServer, actualSensorDatas.get(actualSensorDatas.size()-1).getProduct().getNameOfProduct(),random);
                 try {
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
@@ -165,7 +160,7 @@ public class UDPSocketServer {
             int random = (int )(Math.random() * max + min);
             String resultFromRPCServer = client.buyProduct(sensorData.getProduct().getNameOfProduct(),random,tmpPriceFromShop);
             // check name and value of ordered Product
-            testNameAndValue(resultFromRPCServer, sensorData);
+            testNameAndValue(resultFromRPCServer, sensorData.getProduct().getNameOfProduct(),random);
             System.out.println("RPC answer:" + resultFromRPCServer);
             sendAnswer(sensorData,resultFromRPCServer);
             try {
@@ -181,14 +176,14 @@ public class UDPSocketServer {
     /**
      * check name and value of ordered Product
      * */
-    private void testNameAndValue(String resultFromRPCServer , SensorData sensorData){
-        if(resultFromRPCServer.contains(sensorData.getProduct().getNameOfProduct())){
+    private void testNameAndValue(String resultFromRPCServer , String nameOfProduct, int valueForOrder){
+        if(resultFromRPCServer.contains(nameOfProduct)){
             System.out.println("Name of Product is same");
         }else{
             System.out.println("Name of Product is not same");
         }
 
-        if(resultFromRPCServer.contains(""+sensorData.getProduct().getValueOfProduct())){
+        if(resultFromRPCServer.contains(""+ valueForOrder)){
             System.out.println("Value of Product is equal");
         }else{
             System.out.println("Value of Product is not equal");
