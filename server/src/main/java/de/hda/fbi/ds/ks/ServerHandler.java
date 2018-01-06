@@ -40,4 +40,9 @@ public class ServerHandler implements ShopService.Iface {
         return history;
     }
 
+    public void run(){
+        System.out.println("Hello from run");
+    }
+
+    ServerHandler(){}
 }

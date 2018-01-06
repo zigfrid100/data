@@ -5,6 +5,9 @@ import org.apache.thrift.server.TSimpleServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 
+import de.hda.fbi.ds.ks.configuration.CliProcessor;
+import de.hda.fbi.ds.ks.mqtt.Subscriber;
+
 public class Main {
 
     /** The port the server listens to. */
@@ -40,5 +43,7 @@ public class Main {
     public static void main(String[] args) {
 
         StartSimpleServer(new ShopService.Processor<>(new ServerHandler()));
+        ServerHandler serverHandler = new ServerHandler();
+        serverHandler.run();
     }
 }
