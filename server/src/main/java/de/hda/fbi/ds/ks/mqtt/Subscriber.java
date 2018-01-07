@@ -1,5 +1,6 @@
 package de.hda.fbi.ds.ks.mqtt;
 
+import de.hda.fbi.ds.ks.ServerHandler;
 import de.hda.fbi.ds.ks.configuration.CliParameters;
 import de.hda.fbi.ds.ks.configuration.Constants;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -44,7 +45,8 @@ public class Subscriber {
     public void run() {
         try {
             MqttClient client = new MqttClient(broker, MqttClient.generateClientId());
-            client.setCallback(new SimpleMqttCallback());
+            client.setCallback(new ServerHandler());
+            //client.setCallback(new SimpleMqttCallback());
 
             // Connect to the MQTT broker.
             client.connect();

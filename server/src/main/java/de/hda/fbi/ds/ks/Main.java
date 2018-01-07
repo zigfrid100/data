@@ -41,7 +41,7 @@ public class Main {
      * @param args The command line arguments.
      */
     public static void main(String[] args) {
-        
+
         Thread p1 = new Thread(){
             public void run(){
                 StartSimpleServer(new ShopService.Processor<>(new ServerHandler()));
