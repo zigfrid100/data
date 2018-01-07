@@ -23,7 +23,7 @@ public class Main {
             TServerTransport serverTransport = new TServerSocket(PORT);
             TServer server = new TSimpleServer(new TServer.Args(serverTransport).processor(processor));
             System.out.println("Starting the simple server...");
-            server.serve();
+            //server.serve();
             ServerHandler serverHandler = new ServerHandler();
             serverHandler.run();
         } catch (Exception e) {
