@@ -1,7 +1,7 @@
 package de.hda.fbi.ds.ks.mqtt;
 
-import de.hda.fbi.ds.mbredel.configuration.CliParameters;
-import de.hda.fbi.ds.mbredel.configuration.Constants;
+import de.hda.fbi.ds.ks.configuration.CliParameters;
+import de.hda.fbi.ds.ks.configuration.Constants;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
