@@ -1,5 +1,7 @@
 package de.hda.fbi.ds.ks;
 
+import de.hda.fbi.ds.ks.configuration.CliProcessor;
+import de.hda.fbi.ds.ks.mqtt.Subscriber;
 import org.apache.thrift.TException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +42,14 @@ public class ServerHandler implements ShopService.Iface {
         return history;
     }
 
-    public void run(){
+    public void run(String[] args){
         System.out.println("Hello from run");
+
+        // Parse the command line.
+        CliProcessor.getInstance().parseCliOptions(args);
+        // Start the MQTT subscriber.
+        Subscriber subscriber = new Subscriber();
+        subscriber.run();
     }
 
     ServerHandler(){}

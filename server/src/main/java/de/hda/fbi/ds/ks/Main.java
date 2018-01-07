@@ -23,9 +23,7 @@ public class Main {
             TServerTransport serverTransport = new TServerSocket(PORT);
             TServer server = new TSimpleServer(new TServer.Args(serverTransport).processor(processor));
             System.out.println("Starting the simple server...");
-            //server.serve();
-            ServerHandler serverHandler = new ServerHandler();
-            serverHandler.run();
+            server.serve();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -43,16 +41,22 @@ public class Main {
      * @param args The command line arguments.
      */
     public static void main(String[] args) {
+        
+        Thread p1 = new Thread(){
+            public void run(){
+                StartSimpleServer(new ShopService.Processor<>(new ServerHandler()));
+            }
+        };
 
-        StartSimpleServer(new ShopService.Processor<>(new ServerHandler()));
-        ServerHandler serverHandler = new ServerHandler();
-        serverHandler.run();
+        Thread p2 = new Thread(){
+            public void run(){
+                ServerHandler serverHandler = new ServerHandler();
+                serverHandler.run(args);
+            }
+        };
 
-        // Parse the command line.
-        CliProcessor.getInstance().parseCliOptions(args);
+        p1.start();
+        p2.start();
 
-        // Start the MQTT subscriber.
-        Subscriber subscriber = new Subscriber();
-        subscriber.run();
     }
 }
