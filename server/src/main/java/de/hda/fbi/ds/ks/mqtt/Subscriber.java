@@ -45,8 +45,8 @@ public class Subscriber {
     public void run() {
         try {
             MqttClient client = new MqttClient(broker, MqttClient.generateClientId());
-            client.setCallback(new ServerHandler());
-            //client.setCallback(new SimpleMqttCallback());
+            //client.setCallback(new ServerHandler());
+            client.setCallback(new SimpleMqttCallback());
 
             // Connect to the MQTT broker.
             client.connect();

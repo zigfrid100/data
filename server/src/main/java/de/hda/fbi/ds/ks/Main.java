@@ -8,11 +8,15 @@ import org.apache.thrift.transport.TServerTransport;
 import de.hda.fbi.ds.ks.configuration.CliProcessor;
 import de.hda.fbi.ds.ks.mqtt.Subscriber;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
 
     /** The port the server listens to. */
     public static final int PORT = 9090;
 
+    public static List<String> offerMain = new ArrayList<String>();
     /**
      * Start a simple Thrift server.
      *
@@ -42,15 +46,17 @@ public class Main {
      */
     public static void main(String[] args) {
 
+
+        ServerHandler serverHandler = new ServerHandler();
+
         Thread p1 = new Thread(){
             public void run(){
-                StartSimpleServer(new ShopService.Processor<>(new ServerHandler()));
+                StartSimpleServer(new ShopService.Processor<>(serverHandler));
             }
         };
 
         Thread p2 = new Thread(){
             public void run(){
-                ServerHandler serverHandler = new ServerHandler();
                 serverHandler.run(args);
             }
         };

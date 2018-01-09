@@ -47,6 +47,7 @@ public class ServerHandler implements ShopService.Iface, MqttCallback {
 
     @Override
     public List<String> getInvoices(){
+        System.out.println("Offer Main size " + Main.offerMain.size());
         return history;
     }
 
@@ -62,6 +63,8 @@ public class ServerHandler implements ShopService.Iface, MqttCallback {
 
 
     /** The logger. */
+
+    /*
     private static final Logger LOGGER = LoggerFactory.getLogger(ServerHandler.class);
 
     @Override
@@ -85,6 +88,6 @@ public class ServerHandler implements ShopService.Iface, MqttCallback {
             LOGGER.error("Failed to get delivery token message: " + e.getMessage());
         }
     }
-
+    */
     ServerHandler(){}
 }
