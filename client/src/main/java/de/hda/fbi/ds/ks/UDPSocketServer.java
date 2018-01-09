@@ -53,7 +53,7 @@ public class UDPSocketServer {
     public static final int MAX_VALUE_OF_PRODUCT = 50;
     /** test number of orders for loop */
     public static final int NUMBER_OF_ORDERS = 3;
-    public static final boolean TEST_BOOL = true;
+    public static final boolean TEST_BOOL = false;
     /**
      * Default constructor that creates, i.e., opens
      * the socket.

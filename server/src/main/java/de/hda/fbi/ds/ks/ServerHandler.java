@@ -34,6 +34,7 @@ public class ServerHandler implements ShopService.Iface {
     public String buyProduct(String name , int value , int price) throws TException {
         //TODO buy product from offer or special offer
         //TODO change adress by mqtt (from bredel to my)
+        //TODO UDPSocketServer delete tests for buy Products
 
         Offer offer = Main.offerList.getActualOffer();
         Offer specialOffer = Main.specialOfferList.getActualOffer();
