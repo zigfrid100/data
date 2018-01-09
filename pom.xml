@@ -74,6 +74,7 @@
         <module>shared</module>
         <module>client</module>
         <module>server</module>
+        <module>mqttPublisher</module>
     </modules>
 
     <dependencies>

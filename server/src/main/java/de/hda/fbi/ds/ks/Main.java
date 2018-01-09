@@ -5,18 +5,13 @@ import org.apache.thrift.server.TSimpleServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 
-import de.hda.fbi.ds.ks.configuration.CliProcessor;
-import de.hda.fbi.ds.ks.mqtt.Subscriber;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class Main {
 
     /** The port the server listens to. */
     public static final int PORT = 9090;
-
-    public static List<String> offerMain = new ArrayList<String>();
+    /** ALL OFFERS FROM PUBLISHER save in this variable */
+    public static OfferList offerList = new OfferList();
+    public static OfferList specialOfferList = new OfferList();
     /**
      * Start a simple Thrift server.
      *

@@ -1,7 +1,6 @@
 package de.hda.fbi.ds.ks.mqtt;
 
 import de.hda.fbi.ds.ks.Main;
-import de.hda.fbi.ds.ks.ServerHandler;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -26,8 +25,15 @@ public class SimpleMqttCallback implements MqttCallback {
     @Override
     public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
         LOGGER.info("Message received: "+ new String(mqttMessage.getPayload()) );
-       // serverHandler.offer.add(new String(mqttMessage.getPayload())) ;
-        Main.offerMain.add("Message received: "+ new String(mqttMessage.getPayload()));
+        LOGGER.info("GetID is " + mqttMessage.getId());
+        /** SAVE ALL OFFERS ON MAIN*/
+        String tmpl = new String(mqttMessage.getPayload());
+
+        if(tmpl.contains("Special")){
+            Main.specialOfferList.addOffer("Message received: "+ new String(mqttMessage.getPayload()),mqttMessage.getId());
+        }else{
+            Main.offerList.addOffer("Message received: "+ new String(mqttMessage.getPayload()),mqttMessage.getId());
+        }
     }
 
     @Override

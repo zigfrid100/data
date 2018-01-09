@@ -1,15 +1,9 @@
 package de.hda.fbi.ds.ks;
 
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
+
 import de.hda.fbi.ds.ks.configuration.CliProcessor;
 import de.hda.fbi.ds.ks.mqtt.Subscriber;
 import org.apache.thrift.TException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +15,6 @@ import java.util.List;
 public class ServerHandler implements ShopService.Iface {
 
     List<String> history = new ArrayList<String>();
-    public List<String> offer = new ArrayList<String>();
 
     @Override
     public  String hello(String name) throws TException{
@@ -39,6 +32,13 @@ public class ServerHandler implements ShopService.Iface {
 
     @Override
     public String buyProduct(String name , int value , int price) throws TException {
+        //TODO buy product from offer or special offer
+        //TODO change adress by mqtt (from bredel to my)
+
+        Offer offer = Main.offerList.getActualOffer();
+        Offer specialOffer = Main.specialOfferList.getActualOffer();
+
+
         price = price * value;
         history.add("Client buy: " + value +" "+ name  +  "  and pay " + price + " euro.");
         String temp = "Client buy: " + value +" "+ name  +  "  and pay " + price + " euro.";
@@ -47,7 +47,7 @@ public class ServerHandler implements ShopService.Iface {
 
     @Override
     public List<String> getInvoices(){
-        System.out.println("Offer Main size " + Main.offerMain.size());
+        System.out.println("Offer Main size " + Main.offerList.getSizeOfferList());
         return history;
     }
 
@@ -61,33 +61,5 @@ public class ServerHandler implements ShopService.Iface {
         subscriber.run();
     }
 
-
-    /** The logger. */
-
-    /*
-    private static final Logger LOGGER = LoggerFactory.getLogger(ServerHandler.class);
-
-    @Override
-    public void connectionLost(Throwable throwable) {
-        LOGGER.error("Connection to MQTT broker lost!");
-    }
-
-    @Override
-    public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-        LOGGER.info("Message received: "+ new String(mqttMessage.getPayload()) );
-        // serverHandler.offer.add(new String(mqttMessage.getPayload())) ;
-        offer.add(new String(mqttMessage.getPayload()));
-        System.out.println("Size offer " + offer.size());
-    }
-
-    @Override
-    public void deliveryComplete(IMqttDeliveryToken mqttDeliveryToken) {
-        try {
-            LOGGER.info("Delivery completed: "+ mqttDeliveryToken.getMessage() );
-        } catch (MqttException e) {
-            LOGGER.error("Failed to get delivery token message: " + e.getMessage());
-        }
-    }
-    */
     ServerHandler(){}
 }
