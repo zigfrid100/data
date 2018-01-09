@@ -18,7 +18,7 @@ import java.util.List;
  * Thrift interface methods and handles
  * the incoming RPC messages.
  */
-public class ServerHandler implements ShopService.Iface, MqttCallback {
+public class ServerHandler implements ShopService.Iface {
 
     List<String> history = new ArrayList<String>();
     public List<String> offer = new ArrayList<String>();
