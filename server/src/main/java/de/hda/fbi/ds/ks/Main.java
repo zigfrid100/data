@@ -35,10 +35,10 @@ public class Main {
             processorService = new ShopService.Processor(serverHandler);
 
             TServerTransport serverTransport = new TServerSocket(PORT);
-            TServerSocket tServerSocket = new TServerSocket(PORT);
+            //TServerSocket tServerSocket = new TServerSocket(PORT);
             TProtocolFactory protocolFactory = new TBinaryProtocol.Factory();
 
-            TThreadPoolServer.Args args = new TThreadPoolServer.Args(tServerSocket)
+            TThreadPoolServer.Args args = new TThreadPoolServer.Args(serverTransport)
                             .processor(processorService)
                             .protocolFactory(protocolFactory);
             TServer server = new TThreadPoolServer(args);
