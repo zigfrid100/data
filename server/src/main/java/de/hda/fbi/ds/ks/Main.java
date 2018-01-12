@@ -43,8 +43,15 @@ public class Main {
      */
     public static void main(String[] args) {
 
+        // Parse the command line.
+        CliProcessor.getInstance().parseCliOptions(args);
+        // Start the MQTT subscriber.
+        Subscriber subscriber = new Subscriber();
+        subscriber.run();
+
 
         ServerHandler serverHandler = new ServerHandler();
+        StartSimpleServer(new ShopService.Processor<>(new ServerHandler()));
 
         Thread p1 = new Thread(){
             public void run(){
@@ -64,8 +71,8 @@ public class Main {
             }
         };
 
-        p1.start();
-        p2.start();
+        //p1.start();
+        //p2.start();
 
     }
 }
