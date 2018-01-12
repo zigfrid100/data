@@ -23,27 +23,24 @@ public class Main {
     public static ShopService.Processor processorService;
     public static ServerHandler serverHandler;
     /**
-     * Start a simple Thrift server.
+     * Start a multiple Thrift server.
      *
      * @param processor The handler that handles incoming messages.
      */
-    public static void StartSimpleServer() {
-        //public static void StartSimpleServer(ShopService.Processor<ServerHandler> processor) {
+    public static void StartMultipleServer() {
         try {
 
             serverHandler = new ServerHandler();
             processorService = new ShopService.Processor(serverHandler);
 
             TServerTransport serverTransport = new TServerSocket(PORT);
-            //TServerSocket tServerSocket = new TServerSocket(PORT);
             TProtocolFactory protocolFactory = new TBinaryProtocol.Factory();
 
             TThreadPoolServer.Args args = new TThreadPoolServer.Args(serverTransport)
                             .processor(processorService)
                             .protocolFactory(protocolFactory);
             TServer server = new TThreadPoolServer(args);
-            System.out.println("Starting the simple server...");
-
+            System.out.println("Starting the multiple server...");
             server.serve();
 
             //TServer server = new TSimpleServer(new TServer.Args(serverTransport).processor(processor));
@@ -53,13 +50,24 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        /**
-         TServer server = new TThreadPoolServer(new TThreadPoolServer.Args(serverTransport).processor(processor));
-         server.serve();
-
-         */
     }
+
+    /**
+     * Start Simple mqtt server
+     *
+     * */
+    public static void StartSimpleMqttServer(String[] args){
+        try {
+            // Parse the command line.
+            CliProcessor.getInstance().parseCliOptions(args);
+            // Start the MQTT subscriber.
+            Subscriber subscriber = new Subscriber();
+            subscriber.run();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * The main method that actually starts the program.
@@ -69,28 +77,21 @@ public class Main {
     public static void main(String[] args) {
 
 
-        //ServerHandler serverHandler = new ServerHandler();
 
         Thread p1 = new Thread(){
             public void run(){
-                StartSimpleServer();
+                StartMultipleServer();
             }
         };
 
         Thread p2 = new Thread(){
             public void run(){
-
-                //serverHandler.run(args);
-                // Parse the command line.
-                CliProcessor.getInstance().parseCliOptions(args);
-                // Start the MQTT subscriber.
-                Subscriber subscriber = new Subscriber();
-                subscriber.run();
+                StartSimpleMqttServer(args);
             }
         };
 
         p1.start();
-        //p2.start();
+        p2.start();
 
     }
 }
