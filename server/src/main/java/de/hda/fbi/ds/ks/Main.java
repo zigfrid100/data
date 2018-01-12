@@ -1,5 +1,7 @@
 package de.hda.fbi.ds.ks;
 
+import de.hda.fbi.ds.ks.configuration.CliProcessor;
+import de.hda.fbi.ds.ks.mqtt.Subscriber;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TSimpleServer;
 import org.apache.thrift.transport.TServerSocket;
@@ -52,12 +54,18 @@ public class Main {
 
         Thread p2 = new Thread(){
             public void run(){
-                serverHandler.run(args);
+
+                //serverHandler.run(args);
+                // Parse the command line.
+                CliProcessor.getInstance().parseCliOptions(args);
+                // Start the MQTT subscriber.
+                Subscriber subscriber = new Subscriber();
+                subscriber.run();
             }
         };
 
         p1.start();
-        p2.start();
+        //p2.start();
 
     }
 }
