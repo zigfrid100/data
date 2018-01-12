@@ -4,6 +4,7 @@ import de.hda.fbi.ds.ks.configuration.CliProcessor;
 import de.hda.fbi.ds.ks.mqtt.Subscriber;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TSimpleServer;
+import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 
@@ -22,7 +23,8 @@ public class Main {
     public static void StartSimpleServer(ShopService.Processor<ServerHandler> processor) {
         try {
             TServerTransport serverTransport = new TServerSocket(PORT);
-            TServer server = new TSimpleServer(new TServer.Args(serverTransport).processor(processor));
+            //TServer server = new TSimpleServer(new TServer.Args(serverTransport).processor(processor));
+            TServer server = new TThreadPoolServer(TThreadPoolServer.Args(serverTransport).processor(processor));
             System.out.println("Starting the simple server...");
             server.serve();
         } catch (Exception e) {
@@ -43,15 +45,8 @@ public class Main {
      */
     public static void main(String[] args) {
 
-        // Parse the command line.
-        CliProcessor.getInstance().parseCliOptions(args);
-        // Start the MQTT subscriber.
-        Subscriber subscriber = new Subscriber();
-        subscriber.run();
-
 
         ServerHandler serverHandler = new ServerHandler();
-        StartSimpleServer(new ShopService.Processor<>(new ServerHandler()));
 
         Thread p1 = new Thread(){
             public void run(){
@@ -71,7 +66,7 @@ public class Main {
             }
         };
 
-        //p1.start();
+        p1.start();
         //p2.start();
 
     }
