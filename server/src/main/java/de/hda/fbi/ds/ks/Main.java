@@ -65,7 +65,7 @@ public class Main {
         };
 
         p1.start();
-        //p2.start();
+        p2.start();
 
     }
 }
