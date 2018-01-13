@@ -54,8 +54,8 @@ public class ServerHandler implements ShopService.Iface {
 
     public List<String> getInvoices(){
 
-        File[]fList;
-        File F = new File("../java/de/hda/fbi/ks/files");
+        File[] fList;
+        File F = new File("../java/de/hda/fbi/ds/ks/files/");
 
         fList = F.listFiles();
 
