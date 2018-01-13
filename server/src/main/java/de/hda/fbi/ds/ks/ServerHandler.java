@@ -19,6 +19,9 @@ import java.util.Scanner;
 public class ServerHandler implements ShopService.Iface {
 
     List<String> history = new ArrayList<String>();
+    /** ALL OFFERS FROM PUBLISHER save in this variable */
+    private OfferList offerList = new OfferList();
+    private OfferList specialOfferList = new OfferList();
 
     ServerHandler(){}
 
@@ -38,21 +41,7 @@ public class ServerHandler implements ShopService.Iface {
 
     public String buyProduct(String name , int value , int price) throws TException {
         //TODO buy product from offer or special offer
-        //TODO change adress by mqtt (from bredel to my)
-        //TODO зпись в файл инфу с мктт и считывать ее срифт сервером
 
-        Offer offer = Main.offerList.getActualOffer();
-        Offer specialOffer = Main.specialOfferList.getActualOffer();
-
-
-        price = price * value;
-        history.add("Client buy: " + value +" "+ name  +  "  and pay " + price + " euro.");
-        String temp = "Client buy: " + value +" "+ name  +  "  and pay " + price + " euro.";
-        return temp;
-    }
-
-
-    public List<String> getInvoices(){
 
         File[] fList;
         File F = new File("../java/de/hda/fbi/ds/ks/files/");
@@ -63,16 +52,16 @@ public class ServerHandler implements ShopService.Iface {
         {
             if(fList[i].isFile()){
                 System.out.println(String.valueOf(i) + " - " + fList[i].getName());
-                /*try{
+                try{
 
                     FileReader fr = new FileReader("../java/de/hda/fbi/ks/files/"+fList[i].getName());
                     Scanner scan = new Scanner(fr);
 
-                    int ii = 1;
-
-                    while (scan.hasNextLine()) {
-                        System.out.println(ii + " : " + scan.nextLine());
-                        ii++;
+                    if(fList[i].getName() == "offerSpecial.txt"){
+                        specialOfferList.addOffer(scan.nextLine());
+                    }
+                    if(fList[i].getName() == "offer1.txt"){
+                        offerList.addOffer(scan.nextLine());
                     }
 
                     fr.close();
@@ -81,10 +70,19 @@ public class ServerHandler implements ShopService.Iface {
 
                     System.out.println(ex.getMessage());
                 }
-            */}
+            }
 
         }
 
+
+        price = price * value;
+        history.add("Client buy: " + value +" "+ name  +  "  and pay " + price + " euro.");
+        String temp = "Client buy: " + value +" "+ name  +  "  and pay " + price + " euro.";
+        return temp;
+    }
+
+
+    public List<String> getInvoices(){
 
         return history;
     }

@@ -6,17 +6,14 @@ package de.hda.fbi.ds.ks;
  */
 public class Offer {
 
-    private String offer;
-    private int messageID ;
+    private String offer;;
 
-    Offer(String offer , int messageID){
+    Offer(String offer ){
         this.offer = offer;
-        this.messageID = messageID;
     }
 
     Offer(){
         this.offer = "No offer";
-        this.messageID = 0;
     }
 
 
@@ -28,12 +25,5 @@ public class Offer {
         this.offer = message;
     }
 
-    public void setMessageID(int messageID){
-        this.messageID = messageID;
-    }
-
-    public int getMessageID(){
-        return this.messageID;
-    }
 
 }

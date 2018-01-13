@@ -20,8 +20,8 @@ public class OfferList {
         }
     }
 
-    public void addOffer(String offer , int messegaID) {
-        this.offers.add(new Offer(offer,messegaID));
+    public void addOffer(String offer ) {
+        this.offers.add(new Offer(offer));
     }
 
     public int getSizeOfferList(){
