@@ -2,8 +2,13 @@ package de.hda.fbi.ds.ks;
 
 
 import org.apache.thrift.TException;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 
 /**
@@ -34,6 +39,7 @@ public class ServerHandler implements ShopService.Iface {
     public String buyProduct(String name , int value , int price) throws TException {
         //TODO buy product from offer or special offer
         //TODO change adress by mqtt (from bredel to my)
+        //TODO зпись в файл инфу с мктт и считывать ее срифт сервером
 
         Offer offer = Main.offerList.getActualOffer();
         Offer specialOffer = Main.specialOfferList.getActualOffer();
@@ -47,19 +53,41 @@ public class ServerHandler implements ShopService.Iface {
 
 
     public List<String> getInvoices(){
-        System.out.println("Offer Main size " + Main.offerList.getSizeOfferList());
+
+        File[]fList;
+        File F = new File("../java/de/hda/fbi/ks/files");
+
+        fList = F.listFiles();
+
+        for(int i=0; i<fList.length; i++)
+        {
+            if(fList[i].isFile()){
+                System.out.println(String.valueOf(i) + " - " + fList[i].getName());
+                /*try{
+
+                    FileReader fr = new FileReader("../java/de/hda/fbi/ks/files/"+fList[i].getName());
+                    Scanner scan = new Scanner(fr);
+
+                    int ii = 1;
+
+                    while (scan.hasNextLine()) {
+                        System.out.println(ii + " : " + scan.nextLine());
+                        ii++;
+                    }
+
+                    fr.close();
+                }
+                catch(IOException ex){
+
+                    System.out.println(ex.getMessage());
+                }
+            */}
+
+        }
+
+
         return history;
     }
-/*
-    public void run(String[] args){
-        System.out.println("Hello from run");
 
-        // Parse the command line.
-        CliProcessor.getInstance().parseCliOptions(args);
-        // Start the MQTT subscriber.
-        Subscriber subscriber = new Subscriber();
-        subscriber.run();
-    }
-*/
 
 }

@@ -92,7 +92,9 @@ public class Publisher {
                 client.publish(cliParameters.getTopic(), message);
                 LOGGER.info("Published message: " + message);
 
-                Thread.sleep(5000);
+
+
+                Thread.sleep(15000);
             }
             // Disconnect from the MQTT broker.
             //client.disconnect();

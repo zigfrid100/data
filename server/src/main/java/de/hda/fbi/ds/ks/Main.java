@@ -11,8 +11,10 @@ import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 
+import java.io.IOException;
 
-public class Main {
+
+public class Main extends Thread {
 
     /** The port the server listens to. */
     public static final int PORT = 9090;
@@ -27,7 +29,7 @@ public class Main {
      *
      * @param processor The handler that handles incoming messages.
      */
-    public static void StartMultipleServer() {
+    public static void StartMultipleServerThrift() {
         try {
 
             serverHandler = new ServerHandler();
@@ -43,10 +45,6 @@ public class Main {
             System.out.println("Starting the multiple server...");
             server.serve();
 
-            //TServer server = new TSimpleServer(new TServer.Args(serverTransport).processor(processor));
-            //TServer server = new TThreadPoolServer(new TThreadPoolServer.Args(serverTransport).processor(processor));
-            //System.out.println("Starting the simple server...");
-            //server.serve();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -77,21 +75,43 @@ public class Main {
     public static void main(String[] args) {
 
 
+        int choice;
 
-        Thread p1 = new Thread(){
-            public void run(){
-                StartMultipleServer();
-            }
-        };
+        if(args.length == 0){
+            // Display menu graphics
+            System.out.println("============================");
+            System.out.println("|     MENU SMART FRIDGE    |");
+            System.out.println("============================");
+            System.out.println("| Options:                 |");
+            System.out.println("|        1. Start Thrift   |");
+            System.out.println("|        2. Start MQTT     |");
+            System.out.println("|        3. Exit           |");
+            System.out.println("============================");
 
-        Thread p2 = new Thread(){
-            public void run(){
+            /** Normally use choice input*/
+            choice = Keyin.inInt(" Select option: ");
+        }else{
+            /**choice for test, with use the bash scripts*/
+            choice = Integer.parseInt(args[0]);
+        }
+
+
+        // Switch construct
+        switch (choice) {
+            case 1:
+                StartMultipleServerThrift();
+                break;
+            case 2:
                 StartSimpleMqttServer(args);
-            }
-        };
+                break;
+            case 3:
+                System.out.println("Exit selected");
+                break;
+            default:
+                System.out.println("Invalid selection");
+                break; // This break is not really necessary
+        }
 
-        p1.start();
-        p2.start();
 
     }
 }
