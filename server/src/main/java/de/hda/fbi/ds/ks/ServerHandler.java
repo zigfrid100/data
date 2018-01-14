@@ -43,7 +43,7 @@ public class ServerHandler implements ShopService.Iface {
 
     public String buyProduct(String name , int value , int price) throws TException {
 
-        String[] result;
+        String[] result = {"0",name,"0"};
 
         File[]fList;
         File F = new File("../java/de/hda/fbi/ds/ks/files");
@@ -85,23 +85,23 @@ public class ServerHandler implements ShopService.Iface {
 
         }
 
-        System.out.println("Before compare");
-        /*
+        System.out.println("Before compare and name is " + name);
+
         if(specialOfferList.findProduct(name)){
-            specialOfferList.printOffer();
+            //specialOfferList.printOffer();
             result = specialOfferList.getPriceAndValueSpecial(specialOfferList.getOffer(),name);
         }else{
 
             result = offer.getPriceAndValue(offer.getBetterOffer(offerList,name),name);
         }
-        */
-        //System.out.println("result length " + result.length + " end");
+
+        System.out.println("After compare");
 
         //price = price * value;
-        //history.add("Client buy: " + result[0] +" "+ result[1]  +  "  and pay " + result[2] + " euro.");
-        //String temp = "Client buy: " + result[0] +" "+ result[1]  +  "  and pay " + result[2] + " euro.";
-        history.add("Client buy: " + value +" "+ name  +  "  and pay " + price + " euro.");
-        String temp = "Client buy: " + value +" "+ name  +  "  and pay " + price + " euro.";
+        history.add("Client buy: " + result[0] +" "+ result[1]  +  "  and pay " + result[2] + " euro.");
+        String temp = "Client buy: " + result[0] +" "+ result[1]  +  "  and pay " + result[2] + " euro.";
+        //history.add("Client buy: " + value +" "+ name  +  "  and pay " + price + " euro.");
+        //String temp = "Client buy: " + value +" "+ name  +  "  and pay " + price + " euro.";
         return temp;
     }
 
