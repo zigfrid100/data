@@ -50,7 +50,7 @@ public class ServerHandler implements ShopService.Iface {
 
         fList = F.listFiles();
 
-        for(int i=0; i<fList.length-1; i++)
+        for(int i=0; i<fList.length; i++)
         {
             if(fList[i].isFile()){
                 System.out.println(String.valueOf(i) + " - " + fList[i].getName());
@@ -60,7 +60,7 @@ public class ServerHandler implements ShopService.Iface {
                     Scanner scan = new Scanner(fr);
 
                     System.out.println("fList length " +  fList.length);
-                    System.out.println("Message from " +fList[i].getName()+" file : " + scan.nextLine());
+                    //System.out.println("Message from " +fList[i].getName()+" file : " + scan.nextLine());
 
 
                     if(fList[i].getName().equals("offerSpecial.txt") ){
