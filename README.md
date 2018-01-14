@@ -1,14 +1,13 @@
-# Aufgabe 3
-_In der dritten Aufgabe soll eine RPC Anbindung des Kühlschranks an ein Gesch ft mittels Apache Thrift 
-implementiert werden. Wenn die Menge eines der 5 Artikel im Kühlschrank unter einen zuvor festgelegten 
-Schwellwert sinkt, soll der Kühlschrank über die Thrift Schnittstelle selbst ndig beim Gesch ft den Artikel 
-nachbestellen. Über die Schnittstelle soll es msglich sein, Artikel nachzubestellen und zu beliebigen 
-Zeitpunkten Rechnungen über die bisher get tigten Bestellungen anzufordern. Artikel haben neben einem Namen 
-auch Preise für eine bestimmte Menge, z.B. €/100g. Der Webserver im Kühlschrank soll dabei so erweitert werden, 
-dass eine Nachbestellung auch manuell über einen Webbrowser erfolgen kann, wenn ausreichend Platz vorhanden ist._
-
-* Hinweis: Wie erfahren die Sensoren, dass ein Artikel geliefert wurde? Das soll simuliert werden -- genau wie das erfolgen sollte, ist ein "Design-Decision", die Sie treffen sollen. *
-* Für diese Aufgabe muss nur ein Gesch ft simuliert werden, aber dieses Gesch ft soll mehr als ein Kühlschrank bedienen. *
+# Aufgabe 4
+_Die vierte Aufgabe besteht darin, dass die Gesch fte (!) über Message-Oriented-Middleware, d.h. MQTT, 
+direkt von Erzeugern (Bauernhof, Metzger Importeur und andere Lieferanten) Informationen 
+über Sonderangebote erhalten und dann Artikel nachbestellen kann. Dazu generieren die öieferanten 
+und Gesch fte periodisch Angebote bzw. Nachfragen für die angebotenen Artikel. Gesch fte konkurrieren 
+miteinander wenn gute Angebote erscheinen („First come, first served“); schlechte Angebote ksnnen 
+liegen bleiben bzw. vom Anbieter „verbessert“ werden, bis K ufer gefunden werden. Überlegen Sie ganz genau, 
+wie Ihrer „virtuelle Markt“ mittels „Publish/Subscribe“-Kan len funktionieren kann und soll 
+(wie viele Kan le brauchen Sie? Wer f ngt an, wer wartet auf wen, wie erfahren Kunden, ob sie bzw. 
+wie viele sie gekauft haben, usw.)._
 
 ----------------------------------------------------------------------------------
 ######
@@ -18,7 +17,7 @@ dass eine Nachbestellung auch manuell über einen Webbrowser erfolgen kann, wenn
 * Then clone Project on brach step1.
 
 ```
-$ git clone https://github.com/zigfrid100/ds17-18.git
+$ git clone -b step4 https://github.com/zigfrid100/ds17-18.git
 ```
 * Don't forget change IP-Address by Client 
 ######
@@ -39,6 +38,7 @@ Next you can compile the server and the client that depend on the shared library
 ```
  $ mvn package -am -pl server
  $ mvn package -am -pl client
+ $ mvn package -am -pl mqttPublisher
 ```
 
 The overall build process is automated using a Makefile that then calls the Maven build tools accordingly. The Makefile support the following targets:
@@ -68,6 +68,13 @@ Please also note that you have to generate the Thrift-generated source code in o
 ```
 $ cd "Project-Directory"/server/src/main/bash
 $ $ ./start-thrift-server.sh 
+in Menu 1 for Thrift multi server and 2 for mqtt server
+```
+* Start RPC MQTT Publisher
+```
+$ cd "Project-Directory"/mqttPublisher/src/main/bash
+$ $ ./mqtt-publisher.sh 
+You can start 2 or 3 mqtt clients 
 ```
 
 * Start UDP Server und UDP Clients
