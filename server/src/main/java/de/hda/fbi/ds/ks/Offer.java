@@ -50,7 +50,7 @@ public class Offer {
             if(tmpResult[i].contains(searchProduct)){
 
                 parts = tmpResult[i].split(" ");
-                result = new String[] {parts[3],parts[2],parts[5]};
+                result = new String[] {parts[4],parts[3],parts[6]};
             }
         }
         return result;

@@ -43,7 +43,7 @@ public class ServerHandler implements ShopService.Iface {
 
     public String buyProduct(String name , int value , int price) throws TException {
 
-        String[] result = {"0",name,"0"};
+        String[] result;
 
         File[]fList;
         File F = new File("../java/de/hda/fbi/ds/ks/files");
