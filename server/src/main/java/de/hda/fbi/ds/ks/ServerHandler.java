@@ -60,8 +60,6 @@ public class ServerHandler implements ShopService.Iface {
                     Scanner scan = new Scanner(fr);
 
                     System.out.println("fList length " +  fList.length);
-                    //System.out.println("Message from " +fList[i].getName()+" file : " + scan.nextLine());
-
 
                     if(fList[i].getName().equals("offerSpecial.txt") ){
                         specialOfferList.addOffer(scan.nextLine());
@@ -85,19 +83,16 @@ public class ServerHandler implements ShopService.Iface {
 
         }
 
-        System.out.println("Before compare and name is " + name);
+        //System.out.println("Before compare and name is " + name);
 
         if(specialOfferList.findProduct(name)){
-            //specialOfferList.printOffer();
             result = specialOfferList.getPriceAndValueSpecial(specialOfferList.getOffer(),name);
         }else{
-
             result = offer.getPriceAndValue(offer.getBetterOffer(offerList,name),name);
         }
 
-        System.out.println("After compare");
+        //System.out.println("After compare");
 
-        //price = price * value;
         history.add("Client buy: " + result[0] +" "+ result[1]  +  "  and pay " + result[2] + " euro.");
         String temp = "Client buy: " + result[0] +" "+ result[1]  +  "  and pay " + result[2] + " euro.";
         //history.add("Client buy: " + value +" "+ name  +  "  and pay " + price + " euro.");
