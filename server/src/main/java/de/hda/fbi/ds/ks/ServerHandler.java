@@ -42,7 +42,7 @@ public class ServerHandler implements ShopService.Iface {
 
 
     public String buyProduct(String name , int value , int price) throws TException {
-        
+
         String[] result;
 
         File[]fList;
@@ -53,7 +53,7 @@ public class ServerHandler implements ShopService.Iface {
         for(int i=0; i<fList.length; i++)
         {
             if(fList[i].isFile()){
-                //System.out.println(String.valueOf(i) + " - " + fList[i].getName());
+                System.out.println(String.valueOf(i) + " - " + fList[i].getName());
                 try{
 
                     FileReader fr = new FileReader("../java/de/hda/fbi/ks/files/"+fList[i].getName());
