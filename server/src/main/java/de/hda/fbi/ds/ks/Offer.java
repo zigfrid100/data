@@ -82,7 +82,6 @@ public class Offer {
             prices[i] = Integer.parseInt(getPriceAndValue(offerList.get(i).getOffer(),searchProduct)[2]);
         }
 
-
         if(prices.length > 1){
             if(prices[0] > prices[prices.length-1]){
                 System.out.println("prices[0] " + prices[0] + " is bigger als " + prices[prices.length-1]);
@@ -91,6 +90,8 @@ public class Offer {
                 System.out.println("prices[prices.length] " + prices[prices.length-1] + " is bigger als " + prices[0]);
                 result = offerList.get(0).getOffer();
             }
+        }else{
+            result = offerList.get(prices.length-1).getOffer();
         }
 
         return result;
