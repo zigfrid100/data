@@ -46,7 +46,7 @@ public class ServerHandler implements ShopService.Iface {
         String[] result;
 
         File[]fList;
-        File F = new File("../java/de/hda/fbi/ks/files");
+        File F = new File("../java/de/hda/fbi/ds/ks/files");
 
         fList = F.listFiles();
 
@@ -56,7 +56,7 @@ public class ServerHandler implements ShopService.Iface {
                 System.out.println(String.valueOf(i) + " - " + fList[i].getName());
                 try{
 
-                    FileReader fr = new FileReader("../java/de/hda/fbi/ks/files/"+fList[i].getName());
+                    FileReader fr = new FileReader("../java/de/hda/fbi/ds/ks/files/"+fList[i].getName());
                     Scanner scan = new Scanner(fr);
 
 
