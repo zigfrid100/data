@@ -43,7 +43,7 @@ public class Offer {
 
         String[] tmpResult;
         String[] parts;
-        String[] result={};
+        String[] result={"0","0","0"};
         tmpResult = offer.split(";");
 
         for(int i = 0 ; i < tmpResult.length; i++){
@@ -60,7 +60,7 @@ public class Offer {
 
         String[] tmpResult;
         String[] parts;
-        String[] result={};
+        String[] result={"0","0","0"};
         tmpResult = offer.split(";");
 
         for(int i = 0 ; i < tmpResult.length; i++){
