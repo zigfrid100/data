@@ -50,7 +50,7 @@ public class ServerHandler implements ShopService.Iface {
 
         fList = F.listFiles();
 
-        for(int i=0; i<fList.length; i++)
+        for(int i=0; i<fList.length-1; i++)
         {
             if(fList[i].isFile()){
                 System.out.println(String.valueOf(i) + " - " + fList[i].getName());
@@ -86,7 +86,7 @@ public class ServerHandler implements ShopService.Iface {
         }
 
         System.out.println("Before compare");
-
+        /*
         if(specialOfferList.findProduct(name)){
             specialOfferList.printOffer();
             result = specialOfferList.getPriceAndValueSpecial(specialOfferList.getOffer(),name);
@@ -94,8 +94,8 @@ public class ServerHandler implements ShopService.Iface {
 
             result = offer.getPriceAndValue(offer.getBetterOffer(offerList,name),name);
         }
-
-        System.out.println("result length " + result.length + " end");
+        */
+        //System.out.println("result length " + result.length + " end");
 
         //price = price * value;
         //history.add("Client buy: " + result[0] +" "+ result[1]  +  "  and pay " + result[2] + " euro.");
