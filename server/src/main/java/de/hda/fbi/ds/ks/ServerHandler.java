@@ -62,7 +62,7 @@ public class ServerHandler implements ShopService.Iface {
                     System.out.println("fList length " +  fList.length);
                     System.out.println("Message from " +fList[i].getName()+" file : " + scan.nextLine());
 
-                    /*
+
                     if(fList[i].getName().equals("offerSpecial.txt") ){
                         specialOfferList.addOffer(scan.nextLine());
                     }
@@ -72,7 +72,7 @@ public class ServerHandler implements ShopService.Iface {
                     }
                     if(fList[i].getName().equals("offer2.txt")){
                         offerList.add(new Offer(scan.nextLine()));
-                    }*/
+                    }
 
 
                     fr.close();
