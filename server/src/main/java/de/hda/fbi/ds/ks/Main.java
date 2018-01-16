@@ -14,6 +14,10 @@ import org.apache.thrift.transport.TServerTransport;
 import java.io.IOException;
 
 
+
+//1000 offers
+//message check
+
 public class Main extends Thread {
 
     /** The port the server listens to. */

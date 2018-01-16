@@ -85,3 +85,6 @@ $ ./start-udp-socket-client-sensor.sh "value of clients"
 ```
 * Don't forget chmod u+x "name of bash file"
 * Webserver support Google Chrome and Safari.
+
+
+Aufgabe beschreiben 
