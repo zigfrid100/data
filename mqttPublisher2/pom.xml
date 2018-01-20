@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mqtt-publisher</artifactId>
-    <name>mqtt-publisher</name>
+    <artifactId>mqtt-publisher2</artifactId>
+    <name>mqtt-publisher2</name>
     <packaging>jar</packaging>
 
 
