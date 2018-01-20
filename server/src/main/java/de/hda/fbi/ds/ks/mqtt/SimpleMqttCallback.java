@@ -32,6 +32,7 @@ public class SimpleMqttCallback implements MqttCallback {
         LOGGER.info("GetID is " + mqttMessage.getId());
         /** SAVE ALL OFFERS ON file.txt*/
         String tmpl = new String(mqttMessage.getPayload());
+        String[] tmplOffer = tmpl.split(";");
 
         if(tmpl.contains("Special")){
             //Main.specialOfferList.addOffer("Message received: "+ new String(mqttMessage.getPayload()),mqttMessage.getId());
@@ -46,7 +47,7 @@ public class SimpleMqttCallback implements MqttCallback {
         }else{
             //Main.offerList.addOffer("Message received: "+ new String(mqttMessage.getPayload()),mqttMessage.getId());
             try {
-                FileWriter writer = new FileWriter("../java/de/hda/fbi/ds/ks/files/offer1.txt");
+                FileWriter writer = new FileWriter("../java/de/hda/fbi/ds/ks/files/"+tmplOffer[0]+".txt");
                 writer.write(new String(mqttMessage.getPayload()));
                 writer.flush();
             } catch (IOException ex) {

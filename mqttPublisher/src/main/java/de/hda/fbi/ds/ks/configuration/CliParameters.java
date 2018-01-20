@@ -43,7 +43,7 @@ public class CliParameters {
     /** The topic the MQTT client subscribes to. */
     private String topic = "hda/mbredel/ds";
     /** The message that is published. */
-    private String message = "hda/ks/ds/Maker1;";
+    private String message = "Maker1;";
     /** Product for offer */
     private static String[] prodacts = {"Tomaten","Gurken","Zwibeln","Wurst","Käse","Zuker","Wasser","Karotten","Milch", "Soja",
             "Kartoffeln","Kohl","Rettich","Hänchen","Rind","Salz","Paprika","Fisch","Butter","Schmand"};

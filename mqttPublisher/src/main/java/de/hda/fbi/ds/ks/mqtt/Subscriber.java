@@ -48,8 +48,8 @@ public class Subscriber {
             LOGGER.info("Connected to MQTT broker: " + client.getServerURI());
 
             // Subscribe to a topic.
-            client.subscribe("hda/ks/ds/Maker1");
-            LOGGER.info("Subscribed to topic: " + client.getTopic("hda/ks/ds/Maker1"));
+            client.subscribe("Maker1");
+            LOGGER.info("Subscribed to topic: " + client.getTopic("Maker1"));
         } catch (MqttException e) {
             LOGGER.error("An error occurred: " + e.getMessage());
         }

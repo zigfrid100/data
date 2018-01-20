@@ -88,3 +88,7 @@ $ ./start-udp-socket-client-sensor.sh "value of clients"
 
 
 Aufgabe beschreiben 
+Jeder Hersteller(Publisher) lässt in seinem Angebot einen Topicname, für die Nachbestellung.
+Wenn die beste Prise gewählt wurde (in ServerHandler ), schickt Geschäft(Zeile 101 in ServerHendler.java) zu Hersteller eine Nachricht.
+Jeder Hersteller (mqttPublisher) sendet zu bestimmtem Potic sein Angebot und wartet auf Antwort im einem bestimmtem Topic.
+(mqttPublisher -> Main.java gibt es 2 Threads) 
