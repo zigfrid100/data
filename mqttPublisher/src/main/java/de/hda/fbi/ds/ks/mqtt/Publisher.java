@@ -128,7 +128,7 @@ public class Publisher {
 
                     //compare the Message TEST
                     File[]fList;
-                    File F = new File("../../../server/src/main/java/de/hda/fbi/ds/ks/files");
+                    File F = new File("../../../../server/src/main/java/de/hda/fbi/ds/ks/files");
 
                     fList = F.listFiles();
 
@@ -138,7 +138,7 @@ public class Publisher {
                             System.out.println(String.valueOf(i) + " - " + fList[i].getName());
                             try{
 
-                                FileReader fr = new FileReader("../../../server/src/main/java/de/hda/fbi/ds/ks/files/"+fList[i].getName());
+                                FileReader fr = new FileReader("../../../../server/src/main/java/de/hda/fbi/ds/ks/files/"+fList[i].getName());
                                 Scanner scan = new Scanner(fr);
 
                                 if(fList[i].getName().contains("Maker1")){
