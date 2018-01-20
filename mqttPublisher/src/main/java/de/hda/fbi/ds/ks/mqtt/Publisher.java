@@ -132,7 +132,7 @@ public class Publisher {
 
 
                     /** allowed chars */
-                    String pattern = "^[a-zA-ZäüöÄÜÖ0-9 ]*$;";
+                    String pattern = "^[a-zA-ZäüöÄÜÖ0-9 ;]*$";
                     // Create a Pattern object
                     java.util.regex.Pattern r = java.util.regex.Pattern.compile(pattern);
                     // Now create matcher object.
