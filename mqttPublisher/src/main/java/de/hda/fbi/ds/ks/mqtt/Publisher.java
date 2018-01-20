@@ -52,8 +52,8 @@ public class Publisher {
     /** The broker URL. */
     private String broker;
     /** Test boolean variable */
-    boolean doTimeTest = false;
-    int valueOfMesseges = 1000;
+    boolean doTimeTest = true;
+    int valueOfMesseges = 100;
 
     /**
      * Default constructor that initializes
@@ -103,7 +103,20 @@ public class Publisher {
                     client.publish(cliParameters.getTopic(), message);
                     LOGGER.info("Published message: " + message);
                 }
+                /** Time test TEST1*/
                 System.out.println("Time for " + valueOfMesseges + " is: " +(timer.getEndTime() - timer.getStartTime())/1000);
+
+                /** compare value send and value receive messages TEST3 */
+                File[]fList;
+                File F = new File("../../../../server/src/main/java/de/hda/fbi/ds/ks/files");
+                fList = F.listFiles();
+
+                if(fList.length == valueOfMesseges){
+                    System.out.println("Send messages "+ valueOfMesseges+" is equal to receive messages " + fList.length);
+                }else{
+                    System.out.println("Send messages "+ valueOfMesseges+" is not equal to receive messages "+fList.length);
+                }
+
 
             }else{
 
@@ -126,18 +139,14 @@ public class Publisher {
                     Thread.sleep(5000);
 
 
-                    //compare the Message TEST
+                    /** compare send and receive the Message TEST2 */
                     File[]fList;
                     File F = new File("../../../../server/src/main/java/de/hda/fbi/ds/ks/files");
-
                     fList = F.listFiles();
-
                     for(int i=0; i<fList.length; i++)
                     {
                         if(fList[i].isFile()){
-                            //System.out.println(String.valueOf(i) + " - " + fList[i].getName());
                             try{
-
                                 FileReader fr = new FileReader("../../../../server/src/main/java/de/hda/fbi/ds/ks/files/"+fList[i].getName());
                                 Scanner scan = new Scanner(fr);
 
@@ -157,7 +166,6 @@ public class Publisher {
                         }
 
                     }
-
 
                     Thread.sleep(60000);
 
