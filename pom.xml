@@ -75,6 +75,7 @@
         <module>client</module>
         <module>server</module>
         <module>mqttPublisher</module>
+        <module>mqttPublisher2</module>
     </modules>
 
     <dependencies>
