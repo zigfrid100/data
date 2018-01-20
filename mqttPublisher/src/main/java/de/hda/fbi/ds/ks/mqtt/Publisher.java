@@ -52,7 +52,7 @@ public class Publisher {
     /** The broker URL. */
     private String broker;
     /** Test boolean variable */
-    boolean doTimeTest = true;
+    boolean doTimeTest = false;
     int valueOfMesseges = 100;
 
     /**
@@ -129,6 +129,23 @@ public class Publisher {
                 while(true) {
                     // Create the message and set a quality-of-service parameter.
                     String messageToSend = cliParameters.getMessage();
+
+
+                    /** allowed chars */
+                    String pattern = "^[a-zA-ZäüöÄÜÖ0-9 ]*$";
+                    // Create a Pattern object
+                    java.util.regex.Pattern r = java.util.regex.Pattern.compile(pattern);
+                    // Now create matcher object.
+                    java.util.regex.Matcher m = r.matcher(messageToSend);
+                    // if chars authorized send UDP packet to Server
+                    if (m.find()) {
+                        System.out.println("is ok");
+                    }else{
+                        System.out.println("NOT ALLOWED SIGNS AVAILABLE");
+                    }
+
+
+
                     MqttMessage message = new MqttMessage(messageToSend.getBytes());
                     message.setQos(Constants.QOS_EXACTLY_ONCE);
 
