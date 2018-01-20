@@ -94,7 +94,7 @@ public class Publisher {
 
 
 
-                Thread.sleep(15000);
+                Thread.sleep(60000);
             }
             // Disconnect from the MQTT broker.
             //client.disconnect();

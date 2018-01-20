@@ -43,7 +43,7 @@ public class CliParameters {
     /** The topic the MQTT client subscribes to. */
     private String topic = "hda/mbredel/ds";
     /** The message that is published. */
-    private String message = "Publisher1";
+    private String message = "hda/ks/ds/Maker1;";
     /** Product for offer */
     private static String[] prodacts = {"Tomaten","Gurken","Zwibeln","Wurst","Käse","Zuker","Wasser","Karotten","Milch", "Soja",
             "Kartoffeln","Kohl","Rettich","Hänchen","Rind","Salz","Paprika","Fisch","Butter","Schmand"};
@@ -60,19 +60,19 @@ public class CliParameters {
     }
 
     public String makeOffer(){
-        String tmp = "";
+        String tmp = message;
         int min_price = 20;
         int max_price = 100;
 
         for(int i = 0 ; i < prodacts.length ; i ++){
             tmp = tmp + " Offer " + prodacts[i] + " 20 for " + getRandomInt(max_price,min_price) +" Euro ; ";
         }
-        message = tmp;
-        return message;
+        //message = tmp;
+        return tmp;
     }
 
     public String makeSpecialOffer(){
-        String tmp = "";
+        String tmp = message;
         int min_prod = 0;
         int max_prod = 19;
         int min_price = 30;

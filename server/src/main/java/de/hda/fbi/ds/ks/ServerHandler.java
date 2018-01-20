@@ -29,6 +29,7 @@ public class ServerHandler implements ShopService.Iface {
     private Offer specialOfferList = new Offer();
     private Offer offer = new Offer();
     String[] tmpResult;
+    String getTopic;
 
     ServerHandler(){}
 
@@ -49,6 +50,7 @@ public class ServerHandler implements ShopService.Iface {
     public String buyProduct(String name , int value , int price) throws TException {
 
         String[] result;
+        String answerToTopic;
 
         File[]fList;
         File F = new File("../java/de/hda/fbi/ds/ks/files");
@@ -88,21 +90,18 @@ public class ServerHandler implements ShopService.Iface {
 
         }
 
-        //System.out.println("Before compare and name is " + name);
-
         if(specialOfferList.findProduct(name)){
             result = specialOfferList.getPriceAndValueSpecial(specialOfferList.getOffer(),name);
+            getTopic = specialOfferList.getTopic(specialOfferList.getOffer());
         }else{
             result = offer.getPriceAndValue(offer.getBetterOffer(offerList,name),name);
+            getTopic = offer.getTopic(offer.getBetterOffer(offerList,name));
         }
 
-        productBuyFromMaker("Client buy: " + result[0] +" "+ result[1]  +  "  and pay " + result[2] + " euro.");
-        //System.out.println("After compare");
+        productBuyFromMaker("Client buy: " + result[0] +" "+ result[1]  +  "  and pay " + result[2] + " euro.",getTopic);
 
         history.add("Client buy: " + result[0] +" "+ result[1]  +  "  and pay " + result[2] + " euro.");
         String temp = "Client buy: " + result[0] +" "+ result[1]  +  "  and pay " + result[2] + " euro.";
-        //history.add("Client buy: " + value +" "+ name  +  "  and pay " + price + " euro.");
-        //String temp = "Client buy: " + value +" "+ name  +  "  and pay " + price + " euro.";
         return temp;
     }
 
@@ -112,9 +111,10 @@ public class ServerHandler implements ShopService.Iface {
         return history;
     }
 
-    public void productBuyFromMaker(String offer){
+    public void productBuyFromMaker(String offer,String topicNew){
 
-        String topic = "hda/ks/ds/Maker1";
+        //String topic = "hda/ks/ds/Maker1";
+        String topic = topicNew;
         String content = offer;
         int qos = 2;
         String broker = "tcp://iot.eclipse.org:1883";

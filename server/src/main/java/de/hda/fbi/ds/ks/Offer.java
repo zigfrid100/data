@@ -39,6 +39,14 @@ public class Offer {
         }
     }
 
+    public String getTopic(String offer){
+        String result;
+        String[] tmpResult;
+        tmpResult = offer.split(";");
+        result = tmpResult[0];
+        return result;
+    }
+
     public String[] getPriceAndValue(String offer, String searchProduct){
 
         String[] tmpResult;
