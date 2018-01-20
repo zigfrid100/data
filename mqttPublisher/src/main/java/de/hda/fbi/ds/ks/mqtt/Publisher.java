@@ -29,7 +29,11 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.Scanner;
 
 /**
  * The MQTT publisher that connects to a
@@ -48,7 +52,7 @@ public class Publisher {
     /** The broker URL. */
     private String broker;
     /** Test boolean variable */
-    boolean doTest = true;
+    boolean doTimeTest = false;
     int valueOfMesseges = 1000;
 
     /**
@@ -79,7 +83,7 @@ public class Publisher {
 
 
         try {
-            if(doTest){
+            if(doTimeTest){
                 MqttClient client = new MqttClient(broker, MqttClient.generateClientId());
 
                 // Connect to the MQTT broker using the connection options.
@@ -111,12 +115,49 @@ public class Publisher {
 
                 while(true) {
                     // Create the message and set a quality-of-service parameter.
-                    MqttMessage message = new MqttMessage(cliParameters.getMessage().getBytes());
+                    String messageToSend = cliParameters.getMessage();
+                    MqttMessage message = new MqttMessage(messageToSend.getBytes());
                     message.setQos(Constants.QOS_EXACTLY_ONCE);
 
                     /** Publish the message.*/
                     client.publish(cliParameters.getTopic(), message);
                     LOGGER.info("Published message : " + message);
+
+                    Thread.sleep(5000);
+
+
+                    //compare the Message TEST
+                    File[]fList;
+                    File F = new File("../../../server/src/main/java/de/hda/fbi/ds/ks/files");
+
+                    fList = F.listFiles();
+
+                    for(int i=0; i<fList.length; i++)
+                    {
+                        if(fList[i].isFile()){
+                            System.out.println(String.valueOf(i) + " - " + fList[i].getName());
+                            try{
+
+                                FileReader fr = new FileReader("../../../server/src/main/java/de/hda/fbi/ds/ks/files/"+fList[i].getName());
+                                Scanner scan = new Scanner(fr);
+
+                                if(fList[i].getName().contains("Maker1")){
+                                    if(scan.nextLine().equals(messageToSend)){
+                                        System.out.println("Message is equal");
+                                    }else{
+                                        System.out.println("Message is not equal");
+                                    }
+                                }
+                                fr.close();
+                            }
+                            catch(IOException ex){
+
+                                System.out.println(ex.getMessage());
+                            }
+                        }
+
+                    }
+
 
                     Thread.sleep(60000);
 
