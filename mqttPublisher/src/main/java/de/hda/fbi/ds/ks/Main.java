@@ -23,6 +23,7 @@ package de.hda.fbi.ds.ks;
 
 import de.hda.fbi.ds.ks.configuration.CliProcessor;
 import de.hda.fbi.ds.ks.mqtt.Publisher;
+import de.hda.fbi.ds.ks.mqtt.Subscriber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
@@ -40,6 +41,43 @@ public class Main {
     /** The logger. */
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
+
+    /**
+     * Start Simple mqtt server
+     *
+     * */
+    public static void StartSimpleMqttServer(String[] args){
+        try {
+            // Parse the command line.
+            CliProcessor.getInstance().parseCliOptions(args);
+            // Start the MQTT subscriber.
+            Subscriber subscriber = new Subscriber();
+            subscriber.run();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Start Simple mqtt client
+     *
+     * */
+    public static void StartSimpleMqttClient(String[] args){
+        try {
+            // Parse the command line.
+            CliProcessor.getInstance().parseCliOptions(args);
+
+            // Start the MQTT subscriber.
+            Publisher publisher = new Publisher();
+            publisher.run();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
     /**
      * The main method that starts the
      * whole client. Thus, it creates
@@ -48,14 +86,20 @@ public class Main {
      *
      * @param args Command-line arguments.
      */
-    public static void main(String[] args)  throws IOException,InterruptedException{
+    public static void main(String[] args)  throws IOException,InterruptedException {
 
-        // Parse the command line.
-        CliProcessor.getInstance().parseCliOptions(args);
-
-        // Start the MQTT subscriber.
-        Publisher publisher = new Publisher();
-        publisher.run();
+        Thread thread1 = new Thread () {
+            public void run () {
+                StartSimpleMqttServer(args);
+            }
+        };
+        Thread thread2 = new Thread () {
+            public void run () {
+                StartSimpleMqttClient(args);
+            }
+        };
+        thread1.start();
+        thread2.start();
 
     }
 
