@@ -48,7 +48,7 @@ public class Publisher {
     /** The broker URL. */
     private String broker;
     /** Test boolean variable */
-    boolean doTest = false;
+    boolean doTest = true;
     int valueOfMesseges = 100;
 
     /**
