@@ -71,17 +71,10 @@ public class ServerHandler implements ShopService.Iface {
                     if(fList[i].getName().equals("offerSpecial.txt") ){
                         specialOfferList.addOffer(scan.nextLine());
                     }
-                    //if(fList[i].getName().equals("offer"+i+".txt")){
-                    /*if(fList[i].getName().equals("offer1.txt")){
-                        offerList.add(new Offer(scan.nextLine()));
-                    }
-                    if(fList[i].getName().equals("offer2.txt")){
-                        offerList.add(new Offer(scan.nextLine()));
-                    }*/
+
                     if(fList[i].getName().contains("Maker")){
                         offerList.add(new Offer(scan.nextLine()));
                     }
-
 
                     fr.close();
                 }

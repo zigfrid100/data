@@ -47,6 +47,9 @@ public class Publisher {
     private CliParameters cliParameters;
     /** The broker URL. */
     private String broker;
+    /** Test boolean variable */
+    boolean doTest = false;
+    int valueOfMesseges = 100;
 
     /**
      * Default constructor that initializes
@@ -76,25 +79,50 @@ public class Publisher {
 
 
         try {
+            if(doTest){
+                MqttClient client = new MqttClient(broker, MqttClient.generateClientId());
 
-            MqttClient client = new MqttClient(broker, MqttClient.generateClientId());
+                // Connect to the MQTT broker using the connection options.
+                client.connect(mqttConnectOpts);
+                LOGGER.info("Connected to MQTT broker: " + client.getServerURI());
 
-            // Connect to the MQTT broker using the connection options.
-            client.connect(mqttConnectOpts);
-            LOGGER.info("Connected to MQTT broker: " + client.getServerURI());
+                //Start test
+                Timer timer = new Timer();
+                for(int i = 0 ; i < valueOfMesseges ; i++) {
 
-            while(true) {
-                // Create the message and set a quality-of-service parameter.
-                MqttMessage message = new MqttMessage(cliParameters.getMessage().getBytes());
-                message.setQos(Constants.QOS_EXACTLY_ONCE);
+                    String testMessage = "message"+i;
+                    // Create the message and set a quality-of-service parameter.
+                    MqttMessage message = new MqttMessage(testMessage.getBytes());
+                    message.setQos(Constants.QOS_EXACTLY_ONCE);
 
-                // Publish the message.
-                client.publish(cliParameters.getTopic(), message);
-                LOGGER.info("Published message: " + message);
+                    // Publish the message.
+                    client.publish(cliParameters.getTopic(), message);
+                    LOGGER.info("Published message: " + message);
+                }
+                System.out.println("Time for " + valueOfMesseges + " is: " +(timer.getEndTime() - timer.getStartTime())/1000);
+
+            }else{
+
+                MqttClient client = new MqttClient(broker, MqttClient.generateClientId());
+
+                // Connect to the MQTT broker using the connection options.
+                client.connect(mqttConnectOpts);
+                LOGGER.info("Connected to MQTT broker: " + client.getServerURI());
+
+                while(true) {
+                    // Create the message and set a quality-of-service parameter.
+                    MqttMessage message = new MqttMessage(cliParameters.getMessage().getBytes());
+                    message.setQos(Constants.QOS_EXACTLY_ONCE);
+
+                    /** Publish the message.*/
+                    client.publish(cliParameters.getTopic(), message);
+                    LOGGER.info("Published message : " + message);
+
+                    Thread.sleep(60000);
+
+            }
 
 
-
-                Thread.sleep(60000);
             }
             // Disconnect from the MQTT broker.
             //client.disconnect();
