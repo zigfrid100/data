@@ -49,7 +49,7 @@ public class Publisher {
     private String broker;
     /** Test boolean variable */
     boolean doTest = true;
-    int valueOfMesseges = 100;
+    int valueOfMesseges = 1000;
 
     /**
      * Default constructor that initializes
