@@ -131,7 +131,7 @@ public class Publisher {
                     String messageToSend = cliParameters.getMessage();
 
 
-                    /** allowed chars */
+                    /** allowed chars in message TEST4*/
                     String pattern = "^[a-zA-ZäüöÄÜÖ0-9 ;]*$";
                     // Create a Pattern object
                     java.util.regex.Pattern r = java.util.regex.Pattern.compile(pattern);
@@ -139,50 +139,50 @@ public class Publisher {
                     java.util.regex.Matcher m = r.matcher(messageToSend);
                     // if chars authorized send UDP packet to Server
                     if (m.find()) {
-                        System.out.println("is ok");
+
+                        MqttMessage message = new MqttMessage(messageToSend.getBytes());
+                        message.setQos(Constants.QOS_EXACTLY_ONCE);
+
+                        /** Publish the message.*/
+                        client.publish(cliParameters.getTopic(), message);
+                        LOGGER.info("Published message : " + message);
+
+                        Thread.sleep(5000);
+
+
+                        /** compare send and receive the Message TEST2 */
+                        File[]fList;
+                        File F = new File("../../../../server/src/main/java/de/hda/fbi/ds/ks/files");
+                        fList = F.listFiles();
+                        for(int i=0; i<fList.length; i++)
+                        {
+                            if(fList[i].isFile()){
+                                try{
+                                    FileReader fr = new FileReader("../../../../server/src/main/java/de/hda/fbi/ds/ks/files/"+fList[i].getName());
+                                    Scanner scan = new Scanner(fr);
+
+                                    if(fList[i].getName().contains("Maker1.txt")){
+                                        if(scan.nextLine().equals(messageToSend)){
+                                            System.out.println("Message is equal");
+                                        }else{
+                                            System.out.println("Message is not equal");
+                                        }
+                                    }
+                                    fr.close();
+                                }
+                                catch(IOException ex){
+
+                                    System.out.println(ex.getMessage());
+                                }
+                            }
+
+                        }
+
+
                     }else{
                         System.out.println("NOT ALLOWED SIGNS AVAILABLE");
                     }
 
-
-
-                    MqttMessage message = new MqttMessage(messageToSend.getBytes());
-                    message.setQos(Constants.QOS_EXACTLY_ONCE);
-
-                    /** Publish the message.*/
-                    client.publish(cliParameters.getTopic(), message);
-                    LOGGER.info("Published message : " + message);
-
-                    Thread.sleep(5000);
-
-
-                    /** compare send and receive the Message TEST2 */
-                    File[]fList;
-                    File F = new File("../../../../server/src/main/java/de/hda/fbi/ds/ks/files");
-                    fList = F.listFiles();
-                    for(int i=0; i<fList.length; i++)
-                    {
-                        if(fList[i].isFile()){
-                            try{
-                                FileReader fr = new FileReader("../../../../server/src/main/java/de/hda/fbi/ds/ks/files/"+fList[i].getName());
-                                Scanner scan = new Scanner(fr);
-
-                                if(fList[i].getName().contains("Maker1.txt")){
-                                    if(scan.nextLine().equals(messageToSend)){
-                                        System.out.println("Message is equal");
-                                    }else{
-                                        System.out.println("Message is not equal");
-                                    }
-                                }
-                                fr.close();
-                            }
-                            catch(IOException ex){
-
-                                System.out.println(ex.getMessage());
-                            }
-                        }
-
-                    }
 
                     Thread.sleep(60000);
 
