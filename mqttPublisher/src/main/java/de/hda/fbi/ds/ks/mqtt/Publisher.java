@@ -135,13 +135,13 @@ public class Publisher {
                     for(int i=0; i<fList.length; i++)
                     {
                         if(fList[i].isFile()){
-                            System.out.println(String.valueOf(i) + " - " + fList[i].getName());
+                            //System.out.println(String.valueOf(i) + " - " + fList[i].getName());
                             try{
 
                                 FileReader fr = new FileReader("../../../../server/src/main/java/de/hda/fbi/ds/ks/files/"+fList[i].getName());
                                 Scanner scan = new Scanner(fr);
 
-                                if(fList[i].getName().contains("Maker1")){
+                                if(fList[i].getName().contains("Maker1.txt")){
                                     if(scan.nextLine().equals(messageToSend)){
                                         System.out.println("Message is equal");
                                     }else{
