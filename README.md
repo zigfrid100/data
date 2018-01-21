@@ -90,24 +90,24 @@ $ ./start-udp-socket-client-sensor.sh "value of clients"
 Aufgabe beschreiben 
 Jeder Hersteller(Publisher) lässt in seinem Angebot einen Topicname, für die Nachbestellung.
 Wenn die beste Prise gewählt wurde (in ServerHandler ), schickt Geschäft(Zeile 101 in ServerHendler.java) zu Hersteller eine Nachricht.
-Jeder Hersteller (mqttPublisher) sendet zu bestimmtem Potic sein Angebot und wartet auf Antwort im einem bestimmtem Topic.
+Jeder Hersteller (mqttPublisher) sendet zu bestimmtem Topic sein Angebot und wartet auf Antwort im einem bestimmtem Topic.
 (mqttPublisher -> Main.java gibt es 2 Threads) 
 
 Tests
 1. in mqttPublisher/src/main/java/de.hda.fbi.ds.ks.mqtt/Publisher.java -> run()
-    Time test z. 94 - 107  (should -> doTimeTest = true;)
+    Time test z. 94 - 107  (should -> DO_TIME_TEST = true;)
     10 message 4,163
     100 message 43,168
     1000 message 451,786
 2. in mqttPublisher/src/main/java/de.hda.fbi.ds.ks.mqtt/Publisher.java -> run()
-    send the message and compare with receive Message (should -> doTimeTest = false;)
+    send the message and compare with receive Message (should -> DO_TIME_TEST = false;)
     z. 153 - 179
     
 3. in mqttPublisher/src/main/java/de.hda.fbi.ds.ks.mqtt/Publisher.java -> run()
-    loss ratio send 100 and receive 100   (should -> doTimeTest = true;)
+    loss ratio send 100 and receive 100   (should -> DO_TIME_TEST = true;)
     z. 109 - 118
 
 4. in mqttPublisher/src/main/java/de.hda.fbi.ds.ks.mqtt/Publisher.java -> run()
-    allowed chars  (should -> doTimeTest = false;)
+    allowed chars  (should -> DO_TIME_TEST = false;)
     z. 134 - 141 
     

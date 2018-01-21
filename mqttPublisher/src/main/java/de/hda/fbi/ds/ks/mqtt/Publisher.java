@@ -51,9 +51,9 @@ public class Publisher {
     private CliParameters cliParameters;
     /** The broker URL. */
     private String broker;
-    /** Test boolean variable */
-    boolean doTimeTest = false;
-    int valueOfMesseges = 100;
+    /** Test boolean constants */
+    final static boolean DO_TIME_TEST = false;
+    final static int NUMBER_OF_MESSAGES = 100;
 
     /**
      * Default constructor that initializes
@@ -83,7 +83,7 @@ public class Publisher {
 
 
         try {
-            if(doTimeTest){
+            if(DO_TIME_TEST){
                 MqttClient client = new MqttClient(broker, MqttClient.generateClientId());
 
                 // Connect to the MQTT broker using the connection options.
@@ -92,7 +92,7 @@ public class Publisher {
 
                 //Start test
                 Timer timer = new Timer();
-                for(int i = 0 ; i < valueOfMesseges ; i++) {
+                for(int i = 0; i < NUMBER_OF_MESSAGES; i++) {
 
                     String testMessage = "message"+i;
                     // Create the message and set a quality-of-service parameter.
@@ -104,17 +104,17 @@ public class Publisher {
                     LOGGER.info("Published message: " + message);
                 }
                 /** Time test TEST1*/
-                System.out.println("Time for " + valueOfMesseges + " is: " +(timer.getEndTime() - timer.getStartTime())/1000);
+                System.out.println("Time for " + NUMBER_OF_MESSAGES + " is: " +(timer.getEndTime() - timer.getStartTime())/1000);
 
-                /** compare value send and value receive messages TEST3 */
+                /** compare number of sent messages (NUMBER_OF_MESSAGES) with number of received messages TEST3 */
                 File[]fList;
                 File F = new File("../../../../server/src/main/java/de/hda/fbi/ds/ks/files");
                 fList = F.listFiles();
 
-                if(fList.length == valueOfMesseges){
-                    System.out.println("Send messages "+ valueOfMesseges+" is equal to receive messages " + fList.length);
+                if(fList.length == NUMBER_OF_MESSAGES){
+                    System.out.println("Number of sent messages "+ NUMBER_OF_MESSAGES +" is equal to number of received messages " + fList.length);
                 }else{
-                    System.out.println("Send messages "+ valueOfMesseges+" is not equal to receive messages "+fList.length);
+                    System.out.println("Number of sent messages "+ NUMBER_OF_MESSAGES +" is not equal to number of received messages "+fList.length);
                 }
 
 
@@ -150,7 +150,7 @@ public class Publisher {
                         Thread.sleep(5000);
 
 
-                        /** compare send and receive the Message TEST2 */
+                        /** compare sent with received Message TEST2 */
                         File[]fList;
                         File F = new File("../../../../server/src/main/java/de/hda/fbi/ds/ks/files");
                         fList = F.listFiles();
